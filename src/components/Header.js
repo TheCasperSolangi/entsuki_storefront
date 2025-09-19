@@ -126,7 +126,7 @@ export default function Header() {
   useEffect(() => {
     const fetchStoreSettings = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/store/settings`);
+        const res = await fetch(`https://api.entsuki.com/api/store/settings`);
         if (!res.ok) throw new Error("無法獲取商店設定");
 
         const data = await res.json();
