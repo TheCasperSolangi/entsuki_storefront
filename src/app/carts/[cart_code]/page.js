@@ -85,7 +85,7 @@ const CartScreen = () => {
       // Don't show full loading state for delivery charges
       
       // Get store coordinates from settings API
-      const storeResponse = await fetch(`https://api.entsuki.com/api/store/settings`);
+      const storeResponse = await fetch(`http://api.entsuki.com/api/store/settings`);
       const storeData = await storeResponse.json();
       
       if (storeResponse.status == 304) {
