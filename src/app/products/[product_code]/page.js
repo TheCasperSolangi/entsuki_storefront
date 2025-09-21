@@ -39,7 +39,7 @@ const ProductDetailScreen = () => {
 
   const fetchProductData = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/by-code/${product_code}`);
+      const response = await fetch(`https://api.entsuki.com/api/products/by-code/${product_code}`);
       const data = await response.json();
       if (data.success) {
         setProduct(data.data);
@@ -57,7 +57,7 @@ const ProductDetailScreen = () => {
 
   const fetchReviews = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews/product/${product_code}`);
+      const response = await fetch(`https://api.entsuki.com/api/reviews/product/${product_code}`);
       const data = await response.json();
       if (data.success) {
         setReviews(data.data);
@@ -97,7 +97,7 @@ const ProductDetailScreen = () => {
     setAddingToCart(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/carts/${cart_code}/add-product`, {
+      const response = await fetch(`https://api.entsuki.com/api/carts/${cart_code}/add-product`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -148,7 +148,7 @@ const ProductDetailScreen = () => {
     setAddingToCart(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/carts/${cart_code}/add-product`, {
+      const response = await fetch(`https://api.entsuki.com/api/carts/${cart_code}/add-product`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -128,7 +128,7 @@ export default function AuthPage() {
       };
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
+        `https://api.entsuki.com/api/auth/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -171,7 +171,7 @@ export default function AuthPage() {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
+        `https://api.entsuki.com/api/auth/register`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -521,7 +521,7 @@ export default function AuthPage() {
                 onSuccess={async (credentialResponse) => {
                   const token = credentialResponse.credential;
                   try {
-                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/social-login`, {
+                    const res = await fetch(`https://api.entsuki.com/api/auth/social-login`, {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ provider: "google", token }),
@@ -553,7 +553,7 @@ export default function AuthPage() {
                 fields="name,email,picture"
                 callback={async (response) => {
                   try {
-                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/social-login`, {
+                    const res = await fetch(`https://api.entsuki.com/api/auth/social-login`, {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ provider: "facebook", token: response.accessToken }),

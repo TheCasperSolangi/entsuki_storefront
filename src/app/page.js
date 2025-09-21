@@ -8,7 +8,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 // API base URL - adjust this to match your environment
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
+const API_BASE_URL = 'https://api.entsuki.com'
 
 // Function to fetch banners
 async function fetchBanners() {

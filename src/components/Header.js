@@ -247,7 +247,7 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       // 調用登出端點
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://192.168.1.13:5000'}/api/auth/logout`, {
+      await fetch(`https://api.entsuki.com/api/auth/logout`, {
         method: 'POST',
         credentials: 'include',
       });

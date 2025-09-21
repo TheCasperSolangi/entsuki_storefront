@@ -38,7 +38,7 @@ const CartScreen = () => {
   const [deliveryChargesLoaded, setDeliveryChargesLoaded] = useState(false);
   const [locationPermissionDenied, setLocationPermissionDenied] = useState(false);
  
-  const API_BASE_URL = `${process.env.NEXT_PUBLIC_API_URL}/api`;
+  const API_BASE_URL = `https://api.entsuki.com/api`;
 
   // Fetch cart data
   useEffect(() => {

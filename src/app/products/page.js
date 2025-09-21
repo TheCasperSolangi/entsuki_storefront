@@ -57,7 +57,7 @@ const ProductCatalogueContent = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
+        const response = await fetch(`https://api.entsuki.com/api/products`);
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
