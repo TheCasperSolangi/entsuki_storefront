@@ -55,7 +55,7 @@ export class NotificationService {
 
     try {
       const headers = await this.getAuthHeaders();
-      const response = await fetch(`${this.baseURL}/api/auth/me`, {
+      const response = await fetch(`https://api.entsuki.com/api/auth/me`, {
         method: 'GET',
         headers,
         credentials: 'include'
@@ -94,7 +94,7 @@ export class NotificationService {
       const headers = await this.getAuthHeaders();
       const username = await this.getUsername();
       
-      const response = await fetch(`${this.baseURL}/api/notifications/user/${username}`, {
+      const response = await fetch(`https://api.entsuki.com/api/notifications/user/${username}`, {
         method: 'GET',
         headers,
         credentials: 'include'
@@ -145,7 +145,7 @@ export class NotificationService {
       const username = await this.getUsername();
       
       // Fixed URL path to match your backend route
-      const response = await fetch(`${this.baseURL}/api/notifications/${notificationId}/read`, {
+      const response = await fetch(`https://api.entsuki.com/api/notifications/${notificationId}/read`, {
         method: 'PUT',
         headers,
         credentials: 'include',
@@ -169,7 +169,7 @@ export class NotificationService {
       const username = await this.getUsername();
       
       // Fixed URL path to match your backend route
-      const response = await fetch(`${this.baseURL}/api/notifications/user/${username}/read-all`, {
+      const response = await fetch(`https://api.entsuki.com/api/notifications/user/${username}/read-all`, {
         method: 'PUT',
         headers,
         credentials: 'include'
@@ -191,7 +191,7 @@ export class NotificationService {
       const headers = await this.getAuthHeaders();
       const username = await this.getUsername();
       
-      const response = await fetch(`${this.baseURL}/api/notifications/${notificationId}`, {
+      const response = await fetch(`https://api.entsuki.com/api/notifications/${notificationId}`, {
         method: 'DELETE',
         headers,
         credentials: 'include',
@@ -214,7 +214,7 @@ export class NotificationService {
       const headers = await this.getAuthHeaders();
       const username = await this.getUsername();
       
-      const response = await fetch(`${this.baseURL}/api/notifications/user/${username}/unread-count`, {
+      const response = await fetch(`https://api.entsuki.com/api/notifications/user/${username}/unread-count`, {
         method: 'GET',
         headers,
         credentials: 'include'
