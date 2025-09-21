@@ -12,7 +12,7 @@ export default function Page() {
   useEffect(() => {
     const fetchAboutUs = async () => {
       try {
-        const res = await fetch(`http://api.entsuki.com/api/store/settings`);
+        const res = await fetch(`https://api.entsuki.com/api/store/settings`);
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         
         const responseData = await res.json();
