@@ -1,4 +1,3 @@
-// components/layout/Header.jsx
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -16,7 +15,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Cookies from "js-cookie";
 
-// 社交媒體圖標組件 (保持與之前相同)
+// Social media icon components (unchanged)
 const FacebookIcon = () => (
   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -25,7 +24,7 @@ const FacebookIcon = () => (
 
 const InstagramIcon = () => (
   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1112.324 0 6.162 6.162 0 01-12.324 0zM12 16a4 4 0 110-8 4 4 0 010 8zm4.965-10.405a1.44 1.44 0 112.881.001 1.44 1.44 0 01-2.881-.001z" />
+    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 8.016a3.984 3.984 0 1 0 0 7.968 3.984 3.984 0 0 0 0-7.968z"/>
   </svg>
 );
 
@@ -49,7 +48,7 @@ const TwitterIcon = () => (
 
 const PinterestIcon = () => (
   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.410 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.097.118.111.221.082.343-.090.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.920-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.748-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001.012.001z"/>
+    <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.410 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.097.118.111.221.082.343-.090.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.920-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.748-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001 12.017.001z"/>
   </svg>
 );
 
@@ -62,7 +61,7 @@ const socialIconMap = {
   pinterest: PinterestIcon,
 };
 
-// 預設網站設定
+// Default site settings
 const FALLBACK_SITE_SETTINGS = {
   appName: "展示 IME",
   currency: "港幣",
@@ -107,22 +106,37 @@ export default function Header() {
   const [cartCode, setCartCode] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState("");
+  const [userType, setUserType] = useState("");
   const [isGuestLoginLoading, setIsGuestLoginLoading] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
-  // 檢查用戶是否已登錄
+  // Check if user is logged in on component mount
   useEffect(() => {
-    const token = Cookies.get("token");
-    const email = Cookies.get("user_email");
-    
-    if (token) {
-      setIsLoggedIn(true);
-      if (email) {
-        setUserEmail(email);
+    const checkAuthStatus = () => {
+      const token = Cookies.get("token");
+      
+      const type = Cookies.get("user_type");
+      
+      if (token) {
+        setIsLoggedIn(true);
+        if (type) {
+          setUserType(type);
+        }
       }
-    }
+      setIsCheckingAuth(false);
+    };
+
+    checkAuthStatus();
   }, []);
 
-  // 獲取商店設定
+  // Auto guest login only if no token exists
+  useEffect(() => {
+    if (!isCheckingAuth && !isLoggedIn && !isGuestLoginLoading) {
+      handleGuestLogin();
+    }
+  }, [isCheckingAuth, isLoggedIn]);
+
+  // Get store settings
   useEffect(() => {
     const fetchStoreSettings = async () => {
       try {
@@ -135,7 +149,7 @@ export default function Header() {
           const settings = data;
           console.log("已獲取設定:", settings);
           
-          // 將 API 數據轉換為組件結構
+          // Transform API data to component structure
           const transformedSettings = {
             appName: settings.appName || FALLBACK_SITE_SETTINGS.appName,
             appLogo: settings.appLogo,
@@ -154,10 +168,11 @@ export default function Header() {
             ],
           };
 
-          // 從 API 數據構建社交連結
+          // Build social links from API data
           const socialPlatforms = [
             { key: 'facebook', name: 'Facebook', icon: 'facebook' },
             { key: 'instagram', name: 'Instagram', icon: 'instagram' },
+            { key: 'youtube', name: 'YouTube', icon: 'youtube' },
             { key: 'linkedin', name: 'LinkedIn', icon: 'linkedin' },
             { key: 'twitter', name: 'Twitter', icon: 'twitter' },
             { key: 'pinterest', name: 'Pinterest', icon: 'pinterest' },
@@ -213,32 +228,33 @@ export default function Header() {
 
       const data = await response.json();
       
-      // 設置響應數據的 Cookies
+      // Set cookies from response data
       if (data.token) {
         Cookies.set("token", data.token, { expires: 7 });
-        Cookies.set("user_email", data.email, { expires: 7 });
+        
         Cookies.set("username", data.username, { expires: 7 });
         Cookies.set("user_type", data.user_type, { expires: 7 });
         
-        // 如果有購物車代碼，設置購物車
+        // Set cart if cart code exists
         if (data.cart && data.cart.cart_code) {
           Cookies.set("cart_code", data.cart.cart_code, { expires: 7 });
           setCartCode(data.cart.cart_code);
         }
 
-        // 更新狀態
+        // Update state
         setIsLoggedIn(true);
         setUserEmail(data.email);
+        setUserType(data.user_type);
         
-        // 如果行動選單開啟，關閉它
+        // Close mobile menu if open
         setMobileMenuOpen(false);
         
-        // 重定向到首頁或刷新
+        // Refresh page
         router.refresh();
       }
     } catch (error) {
       console.error('訪客登錄時出錯:', error);
-      alert('訪客登錄失敗。請重試。');
+      // Don't show alert for guest login failures as it's not critical
     } finally {
       setIsGuestLoginLoading(false);
     }
@@ -246,7 +262,7 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      // 調用登出端點
+      // Call logout endpoint
       await fetch(`https://api.entsuki.com/api/auth/logout`, {
         method: 'POST',
         credentials: 'include',
@@ -254,7 +270,7 @@ export default function Header() {
     } catch (error) {
       console.error('登出時出錯:', error);
     } finally {
-      // 清除所有可能的身份驗證相關 Cookies
+      // Clear all auth-related cookies
       Cookies.remove("auth_token");
       Cookies.remove("token");
       Cookies.remove("jwt_token");
@@ -263,6 +279,7 @@ export default function Header() {
       Cookies.remove("user_type");
       setIsLoggedIn(false);
       setUserEmail("");
+      setUserType("");
       router.push("/");
     }
   };
@@ -273,7 +290,7 @@ export default function Header() {
       if (!cart_code) return;
 
       try {
-        const res = await fetch(`http://localhost:5000/api/carts/code/${cart_code}`);
+        const res = await fetch(`https://api.entsuki.com/api/carts/code/${cart_code}`);
         if (!res.ok) throw new Error("無法獲取購物車");
 
         const data = await res.json();
@@ -295,7 +312,12 @@ export default function Header() {
 
   const href = cartCode ? `/carts/${cartCode}` : "/carts/";
 
-  // 應用來自設定的自訂顏色
+  // Determine user type for UI rendering
+  const isRegularUser = isLoggedIn && userType && userType !== 'guest';
+  const isGuestUser = isLoggedIn && userType === 'guest';
+  const showLoginUI = !isLoggedIn || isGuestUser;
+
+  // Apply custom colors from settings
   const headerStyle = siteSettings.primaryColor ? {
     '--primary-color': siteSettings.primaryColor,
     '--secondary-color': siteSettings.secondaryColor || siteSettings.primaryColor,
@@ -304,7 +326,7 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 bg-white border-b border-gray-200" style={headerStyle}>
-        {/* 頂部欄 - 僅桌面版 */}
+        {/* Top bar - Desktop only */}
         <div className="hidden lg:block border-b border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-3 text-sm text-gray-600">
@@ -333,10 +355,10 @@ export default function Header() {
           </div>
         </div>
 
-        {/* 主標頭 */}
+        {/* Main header */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-4 lg:py-5">
-            {/* 行動選單按鈕 */}
+            {/* Mobile menu button */}
             <button
               className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -349,7 +371,7 @@ export default function Header() {
               )}
             </button>
 
-            {/* 標誌 */}
+            {/* Logo */}
             <Link href="/" className="flex-shrink-0">
               {siteSettings.appLogo ? (
                 <img 
@@ -364,7 +386,7 @@ export default function Header() {
               )}
             </Link>
 
-            {/* 搜尋欄 - 桌面版 */}
+            {/* Search bar - Desktop */}
             <form
               onSubmit={handleSearch}
               className="hidden lg:flex flex-1 max-w-md mx-8"
@@ -383,21 +405,21 @@ export default function Header() {
               </div>
             </form>
 
-            {/* 標頭操作 */}
+            {/* Header actions */}
             <div className="flex items-center space-x-3 lg:space-x-5">
-              {/* 帳戶下拉選單 */}
+              {/* Account dropdown */}
               <div className="relative group">
                 <div className="p-2 text-gray-700 hover:text-gray-900 cursor-pointer flex items-center">
                   <UserIcon className="h-5 w-5 lg:h-6 lg:w-6" />
                   <ChevronDownIcon className="h-4 w-4 ml-1 transition-transform group-hover:rotate-180" />
                 </div>
                 
-                {/* 下拉選單 */}
+                {/* Dropdown menu */}
                 <div className="absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-1 group-hover:translate-y-0">
                   <div className="p-4">
-                    {isLoggedIn ? (
+                    {isRegularUser ? (
                       <>
-                        {/* 已登錄用戶 */}
+                        {/* Logged in user */}
                         <div className="pb-3 mb-3 border-b border-gray-100">
                           <p className="text-sm text-gray-600">已登錄為</p>
                           <p className="font-medium text-gray-900 truncate">{userEmail}</p>
@@ -432,7 +454,7 @@ export default function Header() {
                       </>
                     ) : (
                       <>
-                        {/* 未登錄 */}
+                        {/* Not logged in or guest user */}
                         <div className="pb-3 mb-3 border-b border-gray-100">
                           <p className="text-sm font-medium text-gray-900">歡迎！</p>
                           <p className="text-xs text-gray-600">登錄以存取您的帳戶</p>
@@ -446,7 +468,7 @@ export default function Header() {
                             追蹤訂單
                           </Link>
                           
-                          {/* ShadCN 風格按鈕 */}
+                          {/* ShadCN style buttons */}
                           <Link 
                             href="/auth"
                             className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
@@ -458,13 +480,12 @@ export default function Header() {
                             登錄
                           </Link>
                           
-                          <button 
-                            onClick={handleGuestLogin}
-                            disabled={isGuestLoginLoading}
+                          <Link 
+                            href="/signup"
                             className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full"
                           >
-                            {isGuestLoginLoading ? '正在登錄...' : '以訪客身份繼續'}
-                          </button>
+                            註冊
+                          </Link>
                         </div>
                       </>
                     )}
@@ -472,7 +493,7 @@ export default function Header() {
                 </div>
               </div>
 
-              {/* 通知下拉選單 */}
+              {/* Notification dropdown */}
               <NotificationDropdown />
 
               <Link href={href} className="p-2 text-gray-700 hover:text-gray-900 relative">
@@ -495,7 +516,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* 導航 - 桌面版 */}
+        {/* Navigation - Desktop */}
         <nav className="hidden lg:block border-t border-gray-200">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <ul className="flex space-x-8">
@@ -528,7 +549,7 @@ export default function Header() {
         </nav>
       </header>
 
-      {/* 行動選單 */}
+      {/* Mobile menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-40 bg-white">
           <div className="p-4 border-b border-gray-200">
@@ -544,7 +565,7 @@ export default function Header() {
             </div>
           </div>
           
-          {/* 行動搜尋 */}
+          {/* Mobile search */}
           <div className="p-4 border-b border-gray-200">
             <form onSubmit={handleSearch}>
               <div className="relative">
@@ -562,10 +583,10 @@ export default function Header() {
             </form>
           </div>
           
-          {/* 行動帳戶部分 */}
+          {/* Mobile account section */}
           <div className="px-4 py-6 border-b border-gray-200">
             <h3 className="text-lg font-medium text-gray-900 mb-4">帳戶</h3>
-            {isLoggedIn ? (
+            {isRegularUser ? (
               <div className="space-y-3">
                 <p className="text-sm text-gray-600">已登錄為: <span className="font-medium">{userEmail}</span></p>
                 <div className="space-y-3">
@@ -608,14 +629,14 @@ export default function Header() {
             ) : (
               <div className="space-y-3">
                 <Link 
-                  href="/track-order"
+                  href="/tracking"
                   className="block py-2 text-base text-gray-700 hover:text-gray-900"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   追蹤訂單
                 </Link>
                 <Link 
-                  href="/login"
+                  href="/auth"
                   className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full mb-2"
                   style={{
                     backgroundColor: siteSettings.primaryColor || '#000',
@@ -626,15 +647,13 @@ export default function Header() {
                   登錄
                 </Link>
                 
-                <button 
-                  onClick={() => {
-                    handleGuestLogin();
-                  }}
-                  disabled={isGuestLoginLoading}
+                <Link 
+                  href="/signup"
                   className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
-                  {isGuestLoginLoading ? '正在登錄...' : '以訪客身份繼續'}
-                </button>
+                  註冊
+                </Link>
               </div>
             )}
           </div>
@@ -658,7 +677,7 @@ export default function Header() {
             </ul>
           </nav>
 
-          {/* 行動社交連結 */}
+          {/* Mobile social links */}
           {siteSettings.socialLinks.length > 0 && (
             <div className="px-4 py-6 border-t border-gray-200">
               <div className="flex items-center space-x-4">

@@ -44,7 +44,7 @@ import {
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
-const API_BASE_URL = `https://api.entsuki.com`;
+const API_BASE_URL = `http://localhost:5000`;
 
 export default function ProfilePage() {
   const { user: authUser, loading: authLoading, logout } = useAuth();
@@ -68,7 +68,9 @@ export default function ProfilePage() {
   const [profileForm, setProfileForm] = useState({
     full_name: "",
     email: "",
-    username: ""
+    phone: "",
+    gender: "",
+    birthday: ""
   });
 
   // Address form state (updated for new API structure)
@@ -79,7 +81,11 @@ export default function ProfilePage() {
     country: "",
     city: "",
     state: "",
-    postal_code: ""
+    postal_code: "",
+    phone: "",
+    gender: "",
+    birthday: ""
+
   });
 
   // Saved Cards state
@@ -178,7 +184,10 @@ export default function ProfilePage() {
       setProfileForm({
         full_name: data.full_name || "",
         email: data.email || "",
-        username: data.username || ""
+        username: data.username || "",
+        gender: data.gender || "",
+        birthday: data.birthday || "",
+        phone: data.phone || ""
       });
       
       // Set preferences
@@ -571,15 +580,14 @@ export default function ProfilePage() {
     }
     return null;
   }
-
-  const tabItems = [
-    { id: "profile", label: "Profile", icon: User },
-    { id: "orders", label: "Order History", icon: ShoppingBag },
-    { id: "addresses", label: "Addresses", icon: MapPin },
-    { id: "cards", label: "Saved Cards", icon: CreditCard },
-    { id: "bookings", label: "Appointments", icon: CalendarDays },
-    { id: "preferences", label: "Preferences", icon: Settings },
-  ];
+const tabItems = [
+  { id: "profile", label: "個人資料", icon: User },
+  { id: "orders", label: "訂單紀錄", icon: ShoppingBag },
+  { id: "addresses", label: "地址", icon: MapPin },
+  { id: "cards", label: "已儲存的卡片", icon: CreditCard },
+  { id: "bookings", label: "預約", icon: CalendarDays },
+  { id: "preferences", label: "偏好設定", icon: Settings },
+];
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -621,15 +629,15 @@ export default function ProfilePage() {
           <div className="mb-8">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-                <p className="text-gray-600 mt-1">Manage your account and preferences</p>
+                <h1 className="text-3xl font-bold text-gray-900">我的個人資料</h1>
+                <p className="text-gray-600 mt-1">管理您的帳戶與偏好設定</p>
               </div>
               <Button 
                 onClick={logout} 
                 variant="outline" 
                 className="hover:bg-red-50 hover:text-red-600 hover:border-red-200"
               >
-                Logout
+                登出
               </Button>
             </div>
           </div>
@@ -655,14 +663,14 @@ export default function ProfilePage() {
               <Card className="sticky top-6 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-3 mb-6">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-lg">
+                    <div className="w-12 h-12 rounded-full bg-[#b8935f] flex items-center justify-center text-white font-semibold text-lg">
                       {userData.full_name ? userData.full_name.charAt(0).toUpperCase() : "U"}
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900">{userData.full_name || "User"}</h3>
                       <p className="text-sm text-gray-500">{userData.email}</p>
                       <p className="text-sm text-green-600 font-semibold">
-                        Wallet: ${Number(userData.wallet_balance || 0).toFixed(2)}
+                        錢包: ${Number(userData.wallet_balance || 0).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -676,8 +684,8 @@ export default function ProfilePage() {
                           onClick={() => setActiveTab(item.id)}
                           className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all duration-200 ${
                             activeTab === item.id
-                              ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-lg"
-                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                              ? "bg-[#b8935f] text-white shadow-lg"
+                              : "text-gray-600 hover:bg-[#f0e6d9] hover:text-[#b8935f]"
                           }`}
                         >
                           <Icon className="w-5 h-5" />
@@ -693,102 +701,156 @@ export default function ProfilePage() {
             {/* Main Content */}
             <div className="lg:col-span-3">
               <div className="space-y-6">
-                {/* Profile Tab */}
-                {activeTab === "profile" && (
-                  <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-                    <CardHeader className="pb-6">
-                      <CardTitle className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                          <User className="w-5 h-5 text-blue-600" />
-                          <span>Personal Information</span>
-                        </div>
-                        <Button
-                          onClick={() => setEditingProfile(!editingProfile)}
-                          variant="outline"
-                          size="sm"
-                        >
-                          <Edit className="w-4 h-4 mr-2" />
-                          {editingProfile ? "Cancel" : "Edit"}
-                        </Button>
-                        
-                      </CardTitle>
-                      <CardDescription>
-                        Update your personal details and contact information
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="full_name">Full Name</Label>
-                          <Input 
-                            id="full_name" 
-                            value={profileForm.full_name}
-                            onChange={(e) => setProfileForm({...profileForm, full_name: e.target.value})}
-                            disabled={!editingProfile}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="email">Email</Label>
-                          <Input 
-                            id="email" 
-                            type="email" 
-                            value={profileForm.email}
-                            onChange={(e) => setProfileForm({...profileForm, email: e.target.value})}
-                            disabled={!editingProfile}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="username">Username</Label>
-                          <Input 
-                            id="username" 
-                            value={profileForm.username}
-                            disabled={true} // Username should not be editable
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="wallet">Wallet Balance</Label>
-                          <Input 
-                            id="wallet" 
-                            value={`$${userData.wallet_balance || 0}`}
-                            disabled={true}
-                          />
-                        </div>
-                      </div>
-                      {editingProfile && (
-                        <>
-                          <Separator />
-                          <div className="flex justify-end space-x-2">
-                            <Button 
-                              variant="outline" 
-                              onClick={() => setEditingProfile(false)}
-                            >
-                              Cancel
-                            </Button>
-                            <Button 
-                              onClick={updateUserProfile}
-                              disabled={loading}
-                              className="bg-gradient-to-r from-blue-500 to-purple-600"
-                            >
-                              {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                              Save Changes
-                            </Button>
-                          </div>
-                        </>
-                      )}
-                    </CardContent>
-                  </Card>
-                )}
+{/* Profile Tab */}
+{/* 個人資料頁籤 */}
+{activeTab === "profile" && (
+  <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
+    <CardHeader className="pb-6">
+      <CardTitle className="flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <User className="w-5 h-5 text-blue-600" />
+          <span>個人資訊</span>
+        </div>
+        <Button
+          onClick={() => setEditingProfile(!editingProfile)}
+          variant="outline"
+          size="sm"
+        >
+          <Edit className="w-4 h-4 mr-2" />
+          {editingProfile ? "取消" : "編輯"}
+        </Button>
+      </CardTitle>
+      <CardDescription>
+        更新您的個人詳細資料和聯絡資訊
+      </CardDescription>
+    </CardHeader>
+    <CardContent className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="full_name">全名</Label>
+          <Input 
+            id="full_name" 
+            value={profileForm.full_name || ""}
+            onChange={(e) => setProfileForm({...profileForm, full_name: e.target.value})}
+            disabled={!editingProfile}
+            className={!editingProfile ? "bg-gray-50" : ""}
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="email">電子郵件</Label>
+          <Input 
+            id="email" 
+            type="email" 
+            value={profileForm.email || ""}
+            onChange={(e) => setProfileForm({...profileForm, email: e.target.value})}
+            disabled={true}
+            className="bg-gray-50"
+          />
+        </div>
+       
+        <div className="space-y-2">
+          <Label htmlFor="wallet">錢包餘額</Label>
+          <Input 
+            id="wallet" 
+            value={`$${userData.wallet_balance || 0}`}
+            disabled={true}
+            className="bg-gray-50"
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="birthday">生日</Label>
+          <Input 
+            id="birthday" 
+            type="date"
+            value={profileForm.birthday || ""}
+            onChange={(e) => setProfileForm({...profileForm, birthday: e.target.value})}
+            disabled={!editingProfile}
+            className={!editingProfile ? "bg-gray-50" : ""}
+            placeholder="年-月-日"
+          />
+        </div>
+        
+        <div className="space-y-2">
+          <Label htmlFor="gender">性別</Label>
+          {editingProfile ? (
+            <select
+              id="gender"
+              value={profileForm.gender || ""}
+              onChange={(e) => setProfileForm({...profileForm, gender: e.target.value})}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <option value="">選擇性別</option>
+              <option value="male">男性</option>
+              <option value="female">女性</option>
+              <option value="other">其他</option>
+              <option value="prefer_not_to_say">不願透露</option>
+            </select>
+          ) : (
+            <Input 
+              id="gender" 
+              value={profileForm.gender || ""}
+              disabled={true}
+              className="bg-gray-50"
+            />
+          )}
+        </div>
 
-                {/* Order History Tab */}
+        <div className="space-y-2">
+          <Label htmlFor="phone">電話</Label>
+          <div className="flex">
+            <span className={`flex items-center px-3 border border-r-0 border-gray-300 rounded-l-md text-gray-700 text-sm ${!editingProfile ? 'bg-gray-50' : 'bg-gray-100'}`}>
+              +852
+            </span>
+            <Input
+              id="phone"
+              type="tel"
+              className={`rounded-l-none ${!editingProfile ? "bg-gray-50" : ""}`}
+              value={profileForm.phone || ""}
+              onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
+              placeholder="請輸入電話號碼"
+              disabled={!editingProfile}
+            />
+          </div>
+        </div>
+      </div>
+      
+      {editingProfile && (
+        <>
+          <Separator />
+          <div className="flex justify-end space-x-2">
+            <Button 
+              variant="outline" 
+              onClick={() => setEditingProfile(false)}
+            >
+              取消
+            </Button>
+            <Button 
+              onClick={updateUserProfile}
+              disabled={loading}
+              className="bg-[#b8935f]"
+            >
+              {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              儲存變更
+            </Button>
+          </div>
+        </>
+      )}
+    </CardContent>
+  </Card>
+)}
+
+{/* 訂單記錄頁籤 */}
                 {activeTab === "orders" && (
                   <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-2">
                         <ShoppingBag className="w-5 h-5 text-blue-600" />
-                        <span>Order History</span>
+                        <span>訂單記錄</span>
                       </CardTitle>
                       <CardDescription>
-                        View your past orders and track current ones
+                        查看您的過往訂單並追蹤目前訂單
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -826,10 +888,10 @@ export default function ProfilePage() {
                             </div>
                             <div className="space-y-2">
                               <div className="text-sm text-gray-600">
-                                <strong>Payment:</strong> {order.payment_method}
+                                <strong>付款方式：</strong> {order.payment_method}
                               </div>
                               <div className="text-sm text-gray-600">
-                                <strong>Items:</strong>
+                                <strong>訂購項目：</strong>
                               </div>
                               <div className="flex flex-wrap gap-2">
                                 {order.items.map((item, index) => (
@@ -840,17 +902,17 @@ export default function ProfilePage() {
                               </div>
                             </div>
                             <div className="flex justify-end space-x-2 mt-4">
-                              {/* View Order Details Button */}
+                              {/* 查看訂單詳情按鈕 */}
                               <Button
                                 size="sm"
                                 variant="outline"
                                 onClick={() => viewOrderDetails(order)}
                               >
                                 <Eye className="w-4 h-4 mr-1" />
-                                View Details
+                                查看詳情
                               </Button>
                               
-                              {/* Live Tracking Button (only show if Lalamove tracking is available) */}
+                              {/* 即時追蹤按鈕（僅在有 Lalamove 追蹤時顯示）*/}
                               {hasLalamoveTracking(order) && (
                                 <Button
                                   size="sm"
@@ -859,29 +921,28 @@ export default function ProfilePage() {
                                   className="bg-blue-600 hover:bg-blue-700"
                                 >
                                   <Navigation className="w-4 h-4 mr-1" />
-                                  Live Tracking
+                                  即時追蹤
                                 </Button>
                               )}
                             </div>
                           </div>
                         )) : (
                           <div className="text-center py-8 text-gray-500">
-                            No orders found
+                            找不到訂單
                           </div>
                         )}
                       </div>
                     </CardContent>
                   </Card>
                 )}
-
-                {/* Updated Addresses Tab */}
+{/* Updated Addresses Tab - Hong Kong Only - Traditional Chinese */}
                 {activeTab === "addresses" && (
                   <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
                     <CardHeader>
                       <CardTitle className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <MapPin className="w-5 h-5 text-blue-600" />
-                          <span>Delivery Addresses</span>
+                          <span>送貨地址（香港）</span>
                         </div>
                         <Button
                           onClick={() => setShowAddAddress(!showAddAddress)}
@@ -889,100 +950,139 @@ export default function ProfilePage() {
                           size="sm"
                         >
                           <Plus className="w-4 h-4 mr-2" />
-                          Add Address
+                          新增地址
                         </Button>
                       </CardTitle>
                       <CardDescription>
-                        Manage your delivery addresses
+                        管理您的香港送貨地址
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
                       {/* Add New Address Form */}
                       {showAddAddress && (
                         <div className="mb-6 p-4 border-2 border-dashed border-gray-200 rounded-lg">
-                          <h3 className="font-medium mb-4">Add New Address</h3>
+                          <h3 className="font-medium mb-4">新增地址</h3>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                              <Label htmlFor="field">Address Label</Label>
-                              <Input 
+                              <Label htmlFor="field">地址標籤</Label>
+                              <select 
                                 id="field" 
                                 value={addressForm.field}
                                 onChange={(e) => setAddressForm({...addressForm, field: e.target.value})}
-                                placeholder="e.g., Home, Office"
-                              />
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              >
+                                <option value="">選擇地址類型</option>
+                                <option value="住宅">住宅</option>
+                                <option value="辦公室">辦公室</option>
+                                <option value="工作地點">工作地點</option>
+                                <option value="其他">其他</option>
+                              </select>
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="address1">Address Line 1</Label>
+                              <Label htmlFor="district">地區</Label>
+                              <select 
+                                id="district" 
+                                value={addressForm.district}
+                                onChange={(e) => setAddressForm({...addressForm, district: e.target.value})}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              >
+                                <option value="">選擇地區</option>
+                                {/* Hong Kong Island */}
+                                <optgroup label="香港島">
+                                  <option value="中西區">中西區</option>
+                                  <option value="東區">東區</option>
+                                  <option value="南區">南區</option>
+                                  <option value="灣仔區">灣仔區</option>
+                                </optgroup>
+                                {/* Kowloon */}
+                                <optgroup label="九龍">
+                                  <option value="九龍城區">九龍城區</option>
+                                  <option value="觀塘區">觀塘區</option>
+                                  <option value="深水埗區">深水埗區</option>
+                                  <option value="黃大仙區">黃大仙區</option>
+                                  <option value="油尖旺區">油尖旺區</option>
+                                </optgroup>
+                                {/* New Territories */}
+                                <optgroup label="新界">
+                                  <option value="離島區">離島區</option>
+                                  <option value="葵青區">葵青區</option>
+                                  <option value="北區">北區</option>
+                                  <option value="西貢區">西貢區</option>
+                                  <option value="沙田區">沙田區</option>
+                                  <option value="大埔區">大埔區</option>
+                                  <option value="荃灣區">荃灣區</option>
+                                  <option value="屯門區">屯門區</option>
+                                  <option value="元朗區">元朗區</option>
+                                </optgroup>
+                              </select>
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="address1">街道地址</Label>
                               <Input 
                                 id="address1" 
                                 value={addressForm.address1}
                                 onChange={(e) => setAddressForm({...addressForm, address1: e.target.value})}
-                                placeholder="Street address"
+                                placeholder="大廈名稱及街道地址"
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="address2">Address Line 2 (Optional)</Label>
+                              <Label htmlFor="address2">單位/樓層（選填）</Label>
                               <Input 
                                 id="address2" 
                                 value={addressForm.address2}
                                 onChange={(e) => setAddressForm({...addressForm, address2: e.target.value})}
-                                placeholder="Apartment, suite, etc."
+                                placeholder="單位號碼、樓層等"
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="city">City</Label>
+                              <Label htmlFor="area">地方/區域</Label>
                               <Input 
-                                id="city" 
-                                value={addressForm.city}
-                                onChange={(e) => setAddressForm({...addressForm, city: e.target.value})}
-                                placeholder="City"
+                                id="area" 
+                                value={addressForm.area}
+                                onChange={(e) => setAddressForm({...addressForm, area: e.target.value})}
+                                placeholder="地方或區域名稱"
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="state">State/Province</Label>
-                              <Input 
-                                id="state" 
-                                value={addressForm.state}
-                                onChange={(e) => setAddressForm({...addressForm, state: e.target.value})}
-                                placeholder="State or Province"
-                              />
+                              <Label htmlFor="region">區域</Label>
+                              <select 
+                                id="region" 
+                                value={addressForm.region || "香港島"}
+                                onChange={(e) => setAddressForm({...addressForm, region: e.target.value})}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              >
+                                <option value="香港島">香港島</option>
+                                <option value="九龍">九龍</option>
+                                <option value="新界">新界</option>
+                              </select>
                             </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="country">Country</Label>
+                            <div className="space-y-2 md:col-span-2">
+                              <Label htmlFor="country">國家/地區</Label>
                               <Input 
                                 id="country" 
-                                value={addressForm.country}
-                                onChange={(e) => setAddressForm({...addressForm, country: e.target.value})}
-                                placeholder="Country"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label htmlFor="postal_code">Postal Code</Label>
-                              <Input 
-                                id="postal_code" 
-                                value={addressForm.postal_code}
-                                onChange={(e) => setAddressForm({...addressForm, postal_code: e.target.value})}
-                                placeholder="Postal code"
+                                value="香港特別行政區"
+                                disabled
+                                className="bg-gray-50 text-gray-600"
                               />
                             </div>
                           </div>
                           <div className="flex space-x-2 mt-4">
                             <Button 
                               onClick={addAddress}
-                              disabled={loading || !addressForm.field || !addressForm.address1 || !addressForm.city || !addressForm.state || !addressForm.country || !addressForm.postal_code}
-                              className="bg-gradient-to-r from-blue-500 to-purple-600"
+                              disabled={loading || !addressForm.field || !addressForm.district || !addressForm.address1 || !addressForm.area}
+                              className="bg-[#b8935f]"
                             >
                               {loading ? (
                                 <Loader2 className="w-4 h-4 animate-spin" />
                               ) : (
-                                "Save Address"
+                                "儲存地址"
                               )}
                             </Button>
                             <Button
                               variant="outline"
                               onClick={() => setShowAddAddress(false)}
                             >
-                              Cancel
+                              取消
                             </Button>
                           </div>
                         </div>
@@ -997,18 +1097,66 @@ export default function ProfilePage() {
                                   <div className="space-y-4">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                       <div className="space-y-2">
-                                        <Label>Address Label</Label>
-                                        <Input
+                                        <Label>地址標籤</Label>
+                                        <select
                                           value={address.field || ""}
                                           onChange={(e) => {
                                             const newAddresses = [...addresses];
                                             newAddresses[index] = {...newAddresses[index], field: e.target.value};
                                             setAddresses(newAddresses);
                                           }}
-                                        />
+                                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        >
+                                          <option value="">選擇地址類型</option>
+                                          <option value="住宅">住宅</option>
+                                          <option value="辦公室">辦公室</option>
+                                          <option value="工作地點">工作地點</option>
+                                          <option value="其他">其他</option>
+                                        </select>
                                       </div>
                                       <div className="space-y-2">
-                                        <Label>Address Line 1</Label>
+                                        <Label>地區</Label>
+                                        <select
+                                          value={address.district || ""}
+                                          onChange={(e) => {
+                                            const newAddresses = [...addresses];
+                                            newAddresses[index] = {...newAddresses[index], district: e.target.value};
+                                            setAddresses(newAddresses);
+                                          }}
+                                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        >
+                                          <option value="">選擇地區</option>
+                                          {/* Hong Kong Island */}
+                                          <optgroup label="香港島">
+                                            <option value="中西區">中西區</option>
+                                            <option value="東區">東區</option>
+                                            <option value="南區">南區</option>
+                                            <option value="灣仔區">灣仔區</option>
+                                          </optgroup>
+                                          {/* Kowloon */}
+                                          <optgroup label="九龍">
+                                            <option value="九龍城區">九龍城區</option>
+                                            <option value="觀塘區">觀塘區</option>
+                                            <option value="深水埗區">深水埗區</option>
+                                            <option value="黃大仙區">黃大仙區</option>
+                                            <option value="油尖旺區">油尖旺區</option>
+                                          </optgroup>
+                                          {/* New Territories */}
+                                          <optgroup label="新界">
+                                            <option value="離島區">離島區</option>
+                                            <option value="葵青區">葵青區</option>
+                                            <option value="北區">北區</option>
+                                            <option value="西貢區">西貢區</option>
+                                            <option value="沙田區">沙田區</option>
+                                            <option value="大埔區">大埔區</option>
+                                            <option value="荃灣區">荃灣區</option>
+                                            <option value="屯門區">屯門區</option>
+                                            <option value="元朗區">元朗區</option>
+                                          </optgroup>
+                                        </select>
+                                      </div>
+                                      <div className="space-y-2">
+                                        <Label>街道地址</Label>
                                         <Input
                                           value={address.address1 || ""}
                                           onChange={(e) => {
@@ -1016,10 +1164,11 @@ export default function ProfilePage() {
                                             newAddresses[index] = {...newAddresses[index], address1: e.target.value};
                                             setAddresses(newAddresses);
                                           }}
+                                          placeholder="大廈名稱及街道地址"
                                         />
                                       </div>
                                       <div className="space-y-2">
-                                        <Label>Address Line 2</Label>
+                                        <Label>單位/樓層</Label>
                                         <Input
                                           value={address.address2 || ""}
                                           onChange={(e) => {
@@ -1027,51 +1176,36 @@ export default function ProfilePage() {
                                             newAddresses[index] = {...newAddresses[index], address2: e.target.value};
                                             setAddresses(newAddresses);
                                           }}
+                                          placeholder="單位號碼、樓層等"
                                         />
                                       </div>
                                       <div className="space-y-2">
-                                        <Label>City</Label>
+                                        <Label>地方/區域</Label>
                                         <Input
-                                          value={address.city || ""}
+                                          value={address.area || ""}
                                           onChange={(e) => {
                                             const newAddresses = [...addresses];
-                                            newAddresses[index] = {...newAddresses[index], city: e.target.value};
+                                            newAddresses[index] = {...newAddresses[index], area: e.target.value};
                                             setAddresses(newAddresses);
                                           }}
+                                          placeholder="地方或區域名稱"
                                         />
                                       </div>
                                       <div className="space-y-2">
-                                        <Label>State</Label>
-                                        <Input
-                                          value={address.state || ""}
+                                        <Label>區域</Label>
+                                        <select
+                                          value={address.region || "香港島"}
                                           onChange={(e) => {
                                             const newAddresses = [...addresses];
-                                            newAddresses[index] = {...newAddresses[index], state: e.target.value};
+                                            newAddresses[index] = {...newAddresses[index], region: e.target.value};
                                             setAddresses(newAddresses);
                                           }}
-                                        />
-                                      </div>
-                                      <div className="space-y-2">
-                                        <Label>Country</Label>
-                                        <Input
-                                          value={address.country || ""}
-                                          onChange={(e) => {
-                                            const newAddresses = [...addresses];
-                                            newAddresses[index] = {...newAddresses[index], country: e.target.value};
-                                            setAddresses(newAddresses);
-                                          }}
-                                        />
-                                      </div>
-                                      <div className="space-y-2">
-                                        <Label>Postal Code</Label>
-                                        <Input
-                                          value={address.postal_code || ""}
-                                          onChange={(e) => {
-                                            const newAddresses = [...addresses];
-                                            newAddresses[index] = {...newAddresses[index], postal_code: e.target.value};
-                                            setAddresses(newAddresses);
-                                          }}
-                                        />
+                                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        >
+                                          <option value="香港島">香港島</option>
+                                          <option value="九龍">九龍</option>
+                                          <option value="新界">新界</option>
+                                        </select>
                                       </div>
                                     </div>
                                     <div className="flex space-x-2">
@@ -1083,7 +1217,7 @@ export default function ProfilePage() {
                                         {loading ? (
                                           <Loader2 className="w-4 h-4 animate-spin" />
                                         ) : (
-                                          "Save"
+                                          "儲存"
                                         )}
                                       </Button>
                                       <Button
@@ -1091,15 +1225,23 @@ export default function ProfilePage() {
                                         variant="outline"
                                         onClick={() => setEditingAddress(null)}
                                       >
-                                        Cancel
+                                        取消
                                       </Button>
                                     </div>
                                   </div>
                                 ) : (
                                   <div>
-                                    <div className="font-medium text-blue-600 mb-1">{address.field}</div>
+                                    <div className="font-medium text-blue-600 mb-1 flex items-center">
+                                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs mr-2">
+                                        {address.field}
+                                      </span>
+                                      <span className="text-sm text-gray-500">{address.district}</span>
+                                    </div>
                                     <div className="text-sm text-gray-600">
-                                      {address.full_address || `${address.address1}, ${address.address2 ? address.address2 + ', ' : ''}${address.city}, ${address.state}, ${address.country} - ${address.postal_code}`}
+                                      <div>{address.address1}</div>
+                                      {address.address2 && <div>{address.address2}</div>}
+                                      <div>{address.area}, {address.district}</div>
+                                      <div>{address.region || '香港島'}, 香港特別行政區</div>
                                     </div>
                                   </div>
                                 )}
@@ -1110,6 +1252,7 @@ export default function ProfilePage() {
                                     size="sm" 
                                     variant="outline"
                                     onClick={() => setEditingAddress(index)}
+                                    title="編輯"
                                   >
                                     <Edit className="w-4 h-4" />
                                   </Button>
@@ -1119,6 +1262,7 @@ export default function ProfilePage() {
                                     className="text-red-600 hover:bg-red-50"
                                     onClick={() => deleteAddress(index)}
                                     disabled={loading}
+                                    title="刪除"
                                   >
                                     {loading ? (
                                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -1132,7 +1276,9 @@ export default function ProfilePage() {
                           </div>
                         )) : (
                           <div className="text-center py-8 text-gray-500">
-                            No addresses added yet
+                            <MapPin className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+                            <p>尚未新增香港地址</p>
+                            <p className="text-xs mt-1">新增您的第一個送貨地址以開始使用</p>
                           </div>
                         )}
                       </div>
@@ -1147,7 +1293,7 @@ export default function ProfilePage() {
                       <CardTitle className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <CreditCard className="w-5 h-5 text-blue-600" />
-                          <span>Saved Payment Methods</span>
+                          <span>已儲存的付款方式</span>
                         </div>
                         <Button
                           onClick={() => setShowAddCard(!showAddCard)}
@@ -1155,30 +1301,30 @@ export default function ProfilePage() {
                           size="sm"
                         >
                           <Plus className="w-4 h-4 mr-2" />
-                          Add Card
+                          新增卡片
                         </Button>
                       </CardTitle>
                       <CardDescription>
-                        Manage your saved payment methods for faster checkout
+                        管理您已儲存的付款方式，以加快結帳流程
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
                       {/* Add New Card Form */}
                       {showAddCard && (
                         <div className="mb-6 p-4 border-2 border-dashed border-gray-200 rounded-lg">
-                          <h3 className="font-medium mb-4">Add New Card</h3>
+                          <h3 className="font-medium mb-4">新增卡片</h3>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                              <Label htmlFor="cardholder_name">Cardholder Name</Label>
+                              <Label htmlFor="cardholder_name">持卡人姓名</Label>
                               <Input 
                                 id="cardholder_name" 
                                 value={newCard.cardholder_name}
                                 onChange={(e) => setNewCard({...newCard, cardholder_name: e.target.value})}
-                                placeholder="John Doe"
+                                placeholder="約翰‧杜"
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="card_number">Card Number</Label>
+                              <Label htmlFor="card_number">卡號</Label>
                               <Input 
                                 id="card_number" 
                                 value={newCard.card_number}
@@ -1187,21 +1333,21 @@ export default function ProfilePage() {
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="expiry">Expiry Date</Label>
+                              <Label htmlFor="expiry">到期日</Label>
                               <Input 
                                 id="expiry" 
                                 value={newCard.expiry}
                                 onChange={(e) => setNewCard({...newCard, expiry: e.target.value})}
-                                placeholder="MM/YY"
+                                placeholder="月/年 (MM/YY)"
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label htmlFor="cvv">CVV</Label>
+                              <Label htmlFor="cvv">安全碼</Label>
                               <Input 
                                 id="cvv" 
                                 value={newCard.cvv}
                                 onChange={(e) => setNewCard({...newCard, cvv: e.target.value})}
-                                placeholder="123"
+                                placeholder="安全碼 (CVV) 123"
                                 type="password"
                               />
                             </div>
@@ -1210,19 +1356,19 @@ export default function ProfilePage() {
                             <Button 
                               onClick={addCard}
                               disabled={loading || !newCard.card_number || !newCard.expiry || !newCard.cvv}
-                              className="bg-gradient-to-r from-blue-500 to-purple-600"
+                              className="bg-[#b8935f]"
                             >
                               {loading ? (
                                 <Loader2 className="w-4 h-4 animate-spin" />
                               ) : (
-                                "Save Card"
+                                "儲存卡片"
                               )}
                             </Button>
                             <Button
                               variant="outline"
                               onClick={() => setShowAddCard(false)}
                             >
-                              Cancel
+                              取消
                             </Button>
                           </div>
                         </div>
@@ -1238,7 +1384,7 @@ export default function ProfilePage() {
                                   <div>
                                     <div className="font-medium">{formatCardNumber(card.card_number)}</div>
                                     <div className="text-sm text-gray-500">
-                                      Expires: {card.expiry} {card.cardholder_name && `• ${card.cardholder_name}`}
+                                      到期: {card.expiry} {card.cardholder_name && `• ${card.cardholder_name}`}
                                     </div>
                                   </div>
                                 </div>
@@ -1260,7 +1406,7 @@ export default function ProfilePage() {
                           </div>
                         )) : (
                           <div className="text-center py-8 text-gray-500">
-                            No saved cards yet
+                            尚未儲存任何卡片
                           </div>
                         )}
                       </div>
@@ -1275,29 +1421,30 @@ export default function ProfilePage() {
                       <CardTitle className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <CalendarDays className="w-5 h-5 text-blue-600" />
-                          <span>My Appointments</span>
+                          <span>我的預約</span>
                         </div>
                         <Button
                           onClick={() => setShowBookingForm(!showBookingForm)}
                           variant="outline"
                           size="sm"
+
                         >
                           <Plus className="w-4 h-4 mr-2" />
-                          Book Appointment
+                          預約
                         </Button>
                       </CardTitle>
                       <CardDescription>
-                        Manage your appointments and bookings
+                        管理您的預約和訂單
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
                       {/* Book New Appointment Form */}
                       {showBookingForm && (
                         <div className="mb-6 p-4 border-2 border-dashed border-gray-200 rounded-lg">
-                          <h3 className="font-medium mb-4">Book New Appointment</h3>
+                          <h3 className="font-medium mb-4">預約新行程</h3>
                           <div className="space-y-4">
                             <div className="space-y-2">
-                              <Label htmlFor="appointment_date">Select Date</Label>
+                              <Label htmlFor="appointment_date">選擇日期</Label>
                               <Input 
                                 id="appointment_date" 
                                 type="date"
@@ -1313,7 +1460,7 @@ export default function ProfilePage() {
                             </div>
                             {availableSlots.length > 0 && (
                               <div className="space-y-2">
-                                <Label>Available Time Slots</Label>
+                                <Label>可用時段</Label>
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                                   {availableSlots.map((slot) => (
                                     <Button
@@ -1326,7 +1473,7 @@ export default function ProfilePage() {
                                       <span className="font-medium">{slot.slot_name}</span>
                                       <span className="text-xs">{slot.start_time} - {slot.end_time}</span>
                                       <span className="text-xs text-gray-500">
-                                        {slot.max_bookings - slot.current_bookings} slots left
+                                        {slot.max_bookings - slot.current_bookings} 剩餘名額
                                       </span>
                                     </Button>
                                   ))}
@@ -1335,7 +1482,7 @@ export default function ProfilePage() {
                             )}
                             {selectedDate && availableSlots.length === 0 && (
                               <div className="text-center py-4 text-gray-500">
-                                No available slots for selected date
+                                所選日期無可用時段
                               </div>
                             )}
                           </div>
@@ -1343,12 +1490,12 @@ export default function ProfilePage() {
                             <Button 
                               onClick={() => createBooking(selectedSlot)}
                               disabled={loading || !selectedSlot}
-                              className="bg-gradient-to-r from-blue-500 to-purple-600"
+                              className="bg-[#b8935f]"
                             >
                               {loading ? (
                                 <Loader2 className="w-4 h-4 animate-spin" />
                               ) : (
-                                "Book Appointment"
+                                "預約"
                               )}
                             </Button>
                             <Button
@@ -1360,7 +1507,7 @@ export default function ProfilePage() {
                                 setAvailableSlots([]);
                               }}
                             >
-                              Cancel
+                              取消
                             </Button>
                           </div>
                         </div>
@@ -1388,28 +1535,28 @@ export default function ProfilePage() {
                             </div>
                             <div className="space-y-2">
                               <div className="text-sm text-gray-600">
-                                <strong>Slot:</strong> {booking.slot_code}
+                                <strong>時段:</strong> {booking.slot_code}
                               </div>
                               {booking.runtime && (
                                 <div className="text-sm text-gray-600">
-                                  <strong>Duration:</strong> {booking.runtime} minutes
+                                  <strong>時長:</strong> {booking.runtime} minutes
                                 </div>
                               )}
                               {booking.cancellation_reason && (
                                 <div className="text-sm text-red-600">
-                                  <strong>Cancellation Reason:</strong> {booking.cancellation_reason}
+                                  <strong>取消原因:</strong> {booking.cancellation_reason}
                                 </div>
                               )}
                               {booking.reschedule_slot_code && (
                                 <div className="text-sm text-blue-600">
-                                  <strong>Rescheduled to:</strong> {booking.reschedule_slot_code}
+                                  <strong>改期至:</strong> {booking.reschedule_slot_code}
                                 </div>
                               )}
                             </div>
                           </div>
                         )) : (
                           <div className="text-center py-8 text-gray-500">
-                            No appointments found
+                            未找到任何預約
                           </div>
                         )}
                       </div>
@@ -1423,17 +1570,17 @@ export default function ProfilePage() {
                     <CardHeader>
                       <CardTitle className="flex items-center space-x-2">
                         <Settings className="w-5 h-5 text-blue-600" />
-                        <span>Account Preferences</span>
+                        <span>帳戶偏好設定</span>
                       </CardTitle>
                       <CardDescription>
-                        Customize your account settings and preferences
+                        自訂您的帳戶設定與偏好
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6">
                       <div className="space-y-4">
                         <h3 className="font-medium flex items-center space-x-2">
                           <Bell className="w-5 h-5 text-blue-600" />
-                          <span>Notification Preferences</span>
+                          <span>通知偏好設定</span>
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {["EMAIL", "PUSH_NOTIFICATIONS", "IN_APP_NOTIFICATIONS"].map((pref) => (
@@ -1460,54 +1607,42 @@ export default function ProfilePage() {
                       <div className="space-y-4">
                         <h3 className="font-medium flex items-center space-x-2">
                           <Globe className="w-5 h-5 text-blue-600" />
-                          <span>Language & Region</span>
+                          <span>語言與地區</span>
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="space-y-2">
-                            <Label htmlFor="language">Language</Label>
+                            <Label htmlFor="language">語言</Label>
                             <select
                               id="language"
                               value={preferences.language}
                               onChange={(e) => setPreferences({...preferences, language: e.target.value})}
                               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             >
-                              <option value="en">English</option>
-                              <option value="es">Spanish</option>
-                              <option value="fr">French</option>
-                              <option value="de">German</option>
-                              <option value="zh">Chinese</option>
+                              <option value="en">繁體中文</option>
                             </select>
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="currency">Currency</Label>
+                            <Label htmlFor="currency">貨幣</Label>
                             <select
                               id="currency"
                               value={preferences.currency}
                               onChange={(e) => setPreferences({...preferences, currency: e.target.value})}
                               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             >
-                              <option value="USD">USD ($)</option>
-                              <option value="EUR">EUR (€)</option>
-                              <option value="GBP">GBP (£)</option>
-                              <option value="JPY">JPY (¥)</option>
-                              <option value="CAD">CAD (C$)</option>
+                              <option value="USD">港幣 (HKD)</option>
+
                             </select>
                           </div>
                           <div className="space-y-2">
-                            <Label htmlFor="timezone">Timezone</Label>
+                            <Label htmlFor="timezone">時區</Label>
                             <select
                               id="timezone"
                               value={preferences.timezone}
                               onChange={(e) => setPreferences({...preferences, timezone: e.target.value})}
                               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             >
-                              <option value="America/New_York">Eastern Time (ET)</option>
-                              <option value="America/Chicago">Central Time (CT)</option>
-                              <option value="America/Denver">Mountain Time (MT)</option>
-                              <option value="America/Los_Angeles">Pacific Time (PT)</option>
-                              <option value="Europe/London">Greenwich Mean Time (GMT)</option>
-                              <option value="Europe/Paris">Central European Time (CET)</option>
-                              <option value="Asia/Tokyo">Japan Standard Time (JST)</option>
+                              <option value="America/New_York">香港時間 (HKT)</option>
+
                             </select>
                           </div>
                         </div>
@@ -1519,10 +1654,10 @@ export default function ProfilePage() {
                         <Button 
                           onClick={updatePreferences}
                           disabled={loading}
-                          className="bg-gradient-to-r from-blue-500 to-purple-600"
+                          className="bg-[#b8935f]"
                         >
                           {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                          Save Preferences
+                          儲存偏好設定
                         </Button>
                       </div>
                     </CardContent>

@@ -141,6 +141,7 @@ export default function AuthPage() {
 
       if (res.ok) {
         Cookies.set("token", data.token, { expires: 1 });
+        Cookies.set("user_type", data.user_type, {expires: 1})
         Cookies.set("cart_code", data.cart?.cart_code || "", { expires: 1 });
         router.push("/");
         loginSuccess(data.token);
@@ -298,30 +299,30 @@ export default function AuthPage() {
         return (
           <div className="space-y-4">
             <div className="text-center mb-6">
-              <h3 className="text-xl font-semibold text-gray-800">Personal Information</h3>
-              <p className="text-gray-600">Tell us about yourself to get started</p>
+              <h3 className="text-xl font-semibold text-gray-800">個人資料</h3>
+              <p className="text-gray-600">請告訴我們您的相關資訊以便開始</p>
             </div>
             <div>
-              <Label htmlFor="fullName">Full Name</Label>
+              <Label htmlFor="fullName">全名</Label>
               <Input
                 id="fullName"
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 required
-                placeholder="Enter your full name"
+                placeholder="請輸入您的全名"
                 className="mt-1"
               />
             </div>
             <div>
-              <Label htmlFor="email">Email Address</Label>
+              <Label htmlFor="email">電子郵件地址</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="Enter your email address"
+                placeholder="請輸入您的電子郵件地址"
                 className="mt-1"
               />
             </div>
@@ -331,35 +332,35 @@ export default function AuthPage() {
         return (
           <div className="space-y-4">
             <div className="text-center mb-6">
-              <h3 className="text-xl font-semibold text-gray-800">Secure Your Account</h3>
-              <p className="text-gray-600">Create a strong password to protect your account</p>
+              <h3 className="text-xl font-semibold text-gray-800">保護您的帳戶安全</h3>
+              <p className="text-gray-600">請建立一組高強度密碼以保護您的帳戶安全</p>
             </div>
             <div>
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">密碼</Label>
               <Input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                placeholder="Create a strong password"
+                placeholder="請建立一組高強度密碼"
                 className="mt-1"
               />
-              <p className="text-xs text-gray-500 mt-1">Minimum 6 characters</p>
+              <p className="text-xs text-gray-500 mt-1">至少6個字元</p>
             </div>
             <div>
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">確認密碼</Label>
               <Input
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                placeholder="Confirm your password"
+                placeholder="請確認您的密碼"
                 className="mt-1"
               />
               {confirmPassword && password !== confirmPassword && (
-                <p className="text-xs text-red-500 mt-1">Passwords do not match</p>
+                <p className="text-xs text-red-500 mt-1">密碼不相符</p>
               )}
             </div>
           </div>
@@ -452,20 +453,20 @@ export default function AuthPage() {
         return (
           <div className="space-y-4">
             <div className="text-center mb-6">
-              <h3 className="text-xl font-semibold text-gray-800">Review & Complete</h3>
-              <p className="text-gray-600">Review your information before creating your account</p>
+              <h3 className="text-xl font-semibold text-gray-800">檢視並完成</h3>
+              <p className="text-gray-600">建立帳戶前，請先檢視您的資訊</p>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg space-y-3">
               <div>
-                <p className="text-sm font-medium text-gray-700">Name:</p>
+                <p className="text-sm font-medium text-gray-700">姓名:</p>
                 <p className="text-sm text-gray-600">{fullName}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-700">Email:</p>
+                <p className="text-sm font-medium text-gray-700">電子郵件:</p>
                 <p className="text-sm text-gray-600">{email}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-700">Delivery Address:</p>
+                <p className="text-sm font-medium text-gray-700">送貨地址:</p>
                 <p className="text-sm text-gray-600">
                   {[addressLine1, addressLine2, city, state, zipCode, country]
                     .filter(Boolean)
@@ -489,12 +490,12 @@ export default function AuthPage() {
           {/* Header */}
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900">
-              {isLogin ? "Welcome Back!" : "Create Account"}
+              {isLogin ? "歡迎回來！" : "建立帳戶"}
             </h2>
             <p className="text-gray-600 mt-1">
               {isLogin 
-                ? "Sign in to continue your shopping" 
-                : "Join thousands of happy shoppers"}
+                ? "請登入以繼續您的購物行程" 
+                : "加入成千上萬名滿意顧客的行列"}
             </p>
           </div>
 
@@ -529,6 +530,7 @@ export default function AuthPage() {
                     const data = await res.json();
                     if (res.ok) {
                       Cookies.set("token", data.token, { expires: 1 });
+                      Cookies.set("user_type", data.user_type, {expires: 1})
                       router.push("/");
                       loginSuccess(data.token);
                     } else {
@@ -591,31 +593,31 @@ export default function AuthPage() {
             {isLogin ? (
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="emailOrUsername">Email or Username</Label>
+                  <Label htmlFor="emailOrUsername">電子郵件或使用者名稱</Label>
                   <Input
                     id="emailOrUsername"
                     type="text"
                     value={emailOrUsername}
                     onChange={(e) => setEmailOrUsername(e.target.value)}
                     required
-                    placeholder="Enter your email or username"
+                    placeholder="請輸入您的電子郵件或使用者名稱"
                     className="mt-1"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">密碼</Label>
                   <Input
                     id="password"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    placeholder="Enter your password"
+                    placeholder="請輸入您的密碼"
                     className="mt-1"
                   />
                 </div>
-                <Button type="submit" className="w-full bg-red-600 hover:bg-red-700" disabled={loading}>
-                  {loading ? "Signing In..." : "Sign In"}
+                <Button type="submit" className="w-full bg-[#b8935f] hover:bg-[#b8935f]" disabled={loading}>
+                  {loading ? "登入中..." : "登入"}
                 </Button>
               </div>
             ) : (
@@ -632,7 +634,7 @@ export default function AuthPage() {
                       className="flex items-center gap-2"
                     >
                       <ArrowLeft className="w-4 h-4" />
-                      Back
+                      返回
                     </Button>
                   )}
                   
@@ -641,9 +643,9 @@ export default function AuthPage() {
                       type="button"
                       onClick={nextStep}
                       disabled={!validateStep(signupStep)}
-                      className="flex-1 bg-red-600 hover:bg-red-700 flex items-center justify-center gap-2"
+                      className="flex-1 bg-[#b8935f] flex items-center justify-center gap-2"
                     >
-                      Continue
+                      繼續
                       <ArrowRight className="w-4 h-4" />
                     </Button>
                   ) : (
@@ -665,24 +667,24 @@ export default function AuthPage() {
             <p className="text-sm text-gray-600">
               {isLogin ? (
                 <>
-                  New to ShopEase?{" "}
+                  您是臻萃咖啡的新客戶嗎？{" "}
                   <button
                     type="button"
-                    className="text-red-600 font-medium hover:text-red-700 transition-colors"
+                    className="text-[#b8935f] font-medium hover:text-red-700 transition-colors"
                     onClick={switchToSignup}
                   >
-                    Create an account
+                    建立帳戶
                   </button>
                 </>
               ) : (
                 <>
-                  Already have an account?{" "}
+                  已經有帳戶了嗎？{" "}
                   <button
                     type="button"
-                    className="text-red-600 font-medium hover:text-red-700 transition-colors"
+                    className="text-[#b8935f] font-medium hover:text-[#b8935f] transition-colors"
                     onClick={resetToLogin}
                   >
-                    Sign in here
+                    請由此登入
                   </button>
                 </>
               )}
@@ -693,7 +695,7 @@ export default function AuthPage() {
         {/* Footer */}
         <div className="text-center mt-8">
           <p className="text-sm text-gray-500">
-            By continuing, you agree to our Terms of Service and Privacy Policy
+            繼續即表示您同意我們的服務條款與隱私權政策。
           </p>
         </div>
       </div>

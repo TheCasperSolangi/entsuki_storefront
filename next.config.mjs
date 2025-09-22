@@ -25,6 +25,10 @@ const nextConfig = {
       {
         protocol: "http",
         hostname: "storage.entsuki.com"
+      },
+      {
+        protocol: "https",
+        hostname: "storage.entsuki.com"
       }
     ],
   },

@@ -251,8 +251,8 @@ const ProductCard = ({ product }) => (
       </div>
 
       <div className="flex items-center justify-between mb-3">
-        <span className="text-2xl font-bold text-blue-600">
-          ${product.price}
+        <span className="text-2xl font-bold text-[#b8935f]">
+          HKD {product.price}
         </span>
         <span className="text-sm text-gray-500">
           Stock: {product.stock}
@@ -277,7 +277,7 @@ const ProductCard = ({ product }) => (
             handleAddToCart(product.product_code); // use product_code here
           }}
           disabled={product.stock === 0 || cartUpdating || !user}
-          className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center gap-2"
+          className="flex-1 bg-[#b8935f] text-white px-4 py-2 rounded-md hover:bg-[#a8834f] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center gap-2"
         >
           {cartUpdating ? (
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>

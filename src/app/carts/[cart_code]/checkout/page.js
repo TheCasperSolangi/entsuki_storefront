@@ -586,21 +586,21 @@ const handleSubmit = async () => {
                   className="hover:bg-slate-100 text-slate-700"
                 >
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Cart
+                 返回購物車
                 </Button>
                 <div className="flex items-center space-x-2">
                   <div className="p-2 bg-indigo-100 rounded-lg">
                     <Shield className="w-6 h-6 text-indigo-600" />
                   </div>
-                  <h1 className="text-2xl font-bold text-slate-800">Secure Checkout</h1>
+                  <h1 className="text-2xl font-bold text-slate-800">安全結帳</h1>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
                 <Badge variant="secondary" className="text-sm font-medium px-3 py-1">
-                  Welcome, {user.full_name}
+                  歡迎, {user.full_name}
                 </Badge>
                 <Badge variant="default" className="text-sm font-medium px-3 py-1 bg-indigo-600">
-                  Cart #{cartCode.slice(0, 6)}
+                  購物車 #{cartCode.slice(0, 6)}
                 </Badge>
               </div>
             </div>
@@ -675,7 +675,7 @@ const handleSubmit = async () => {
                   <div className="flex items-center justify-between">
                     <CardTitle className="flex items-center space-x-2">
                       <Truck className="w-5 h-5 text-indigo-600" />
-                      <span>Shipping Address</span>
+                      <span>送貨地址</span>
                     </CardTitle>
                     <label className="flex items-center space-x-2 cursor-pointer">
                       <input
@@ -684,7 +684,7 @@ const handleSubmit = async () => {
                         onChange={(e) => handleSameAsBilling(e.target.checked)}
                         className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
                       />
-                      <span className="text-sm text-slate-600">Same as billing</span>
+                      <span className="text-sm text-slate-600">S與帳單地址相同</span>
                     </label>
                   </div>
                 </CardHeader>
@@ -721,12 +721,12 @@ const handleSubmit = async () => {
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <Mail className="w-5 h-5 text-indigo-600" />
-                    <span>Order Notes</span>
+                    <span>訂單備註</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <Textarea
-                    placeholder="Any special delivery instructions or notes for your order..."
+                    placeholder="您的訂單有任何特殊的送貨指示或備註嗎..."
                     value={formData.special_instructions}
                     onChange={(e) => setFormData(prev => ({ ...prev, special_instructions: e.target.value }))}
                     className="min-h-[100px]"
@@ -827,7 +827,7 @@ const DeliveryOptionsSection = ({ deliveryType, setDeliveryType, scheduledDate, 
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Truck className="w-5 h-5 text-indigo-600" />
-          <span>Delivery Options</span>
+          <span>配送選項</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -852,11 +852,11 @@ const DeliveryOptionsSection = ({ deliveryType, setDeliveryType, scheduledDate, 
                 <Zap className="w-5 h-5" />
               </div>
               <div className="flex-1">
-                <div className="font-medium text-slate-900">Standard Delivery</div>
-                <div className="text-sm text-slate-600">Get your order delivered within 2-3 business days</div>
+                <div className="font-medium text-slate-900">標準配送</div>
+                <div className="text-sm text-slate-600">您的訂單將於 2-3 個工作天內送達</div>
               </div>
               <Badge variant="secondary" className="bg-green-100 text-green-800">
-                Standard
+                標準
               </Badge>
             </div>
           </div>
@@ -881,11 +881,11 @@ const DeliveryOptionsSection = ({ deliveryType, setDeliveryType, scheduledDate, 
                 <Calendar className="w-5 h-5" />
               </div>
               <div className="flex-1">
-                <div className="font-medium text-slate-900">Schedule Delivery</div>
-                <div className="text-sm text-slate-600">Choose a specific date for delivery</div>
+                <div className="font-medium text-slate-900">安排配送</div>
+                <div className="text-sm text-slate-600">選擇配送的特定日期</div>
               </div>
               <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                Flexible
+                彈性
               </Badge>
             </div>
           </div>
@@ -1120,7 +1120,7 @@ const handleStripePayment = async (e) => {
     <div className="mt-4 space-y-4">
       <div className="p-4 border border-slate-200 rounded-lg bg-white">
         <Label className="text-sm font-medium text-slate-700 mb-3 block">
-          Card Information
+          卡片資訊
         </Label>
         <div className="p-3 border border-slate-200 rounded-md bg-slate-50">
           <CardElement options={cardElementOptions} />
@@ -1136,7 +1136,7 @@ const handleStripePayment = async (e) => {
           className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
         />
         <label htmlFor="save-card" className="text-sm text-slate-600 cursor-pointer">
-          Save this card for future purchases
+          將此卡片儲存以供日後使用
         </label>
       </div>
 
@@ -1148,19 +1148,19 @@ const handleStripePayment = async (e) => {
         {processing ? (
           <>
             <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-            Processing Payment...
+            付款處理中…
           </>
         ) : (
           <>
             <Lock className="w-5 h-5 mr-2" />
-            Pay ${cart.total.toFixed(2)} Securely
+            安全完成支付 ${cart.total.toFixed(2)}
           </>
         )}
       </Button>
 
       <div className="flex items-center justify-center space-x-2 text-xs text-slate-500 pt-2">
         <Shield className="w-4 h-4 text-indigo-500" />
-        <span>Secured by Stripe • PCI DSS compliant</span>
+        <span>由 Stripe 提供安全保障 • 符合 PCI DSS 標準</span>
       </div>
     </div>
   );
@@ -1188,9 +1188,9 @@ const PaymentMethodSection = ({
   const paymentMethods = [
     {
       id: 'CARD',
-      name: 'Credit/Debit Card',
+      name: '信用卡/簽帳卡',
       icon: <CreditCard className="w-5 h-5" />,
-      description: 'Visa, Mastercard, American Express',
+      description: 'Visa、Mastercard、美國運通',
       available: true,
       details: (
         <StripePaymentForm 
@@ -1213,25 +1213,25 @@ const PaymentMethodSection = ({
       id: 'PAYPAL',
       name: 'PayPal',
       icon: <Shield className="w-5 h-5" />,
-      description: 'Pay with your PayPal account',
+      description: '使用您的 PayPal 帳戶付款',
       available: true,
       details: (
         <div className="mt-4 p-4 bg-slate-50 rounded-lg text-center">
-          <p className="text-sm text-slate-600 mb-2">You will be redirected to PayPal to complete your payment</p>
+          <p className="text-sm text-slate-600 mb-2">您將被重新導向至 PayPal 完成付款</p>
         </div>
       )
     },
     {
       id: 'WALLET_BALANCE',
-      name: 'Wallet Balance',
+      name: '錢包餘額',
       icon: <Wallet className="w-5 h-5" />,
-      description: `Available: ${user.wallet_balance.toFixed(2)}`,
+      description: `可用餘額：${user.wallet_balance.toFixed(2)}`,
       available: canUseWallet,
       details: (
         <div className="mt-4 p-4 bg-green-50 rounded-lg text-sm text-green-800">
           <div className="flex items-center space-x-2">
             <CheckCircle className="w-4 h-4" />
-            <span>Your wallet balance covers this purchase</span>
+            <span>您的錢包餘額足以支付此筆訂單</span>
           </div>
         </div>
       )
@@ -1243,7 +1243,7 @@ const PaymentMethodSection = ({
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Lock className="w-5 h-5 text-indigo-600" />
-          <span>Payment Method</span>
+          <span>付款方式</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -1274,7 +1274,7 @@ const PaymentMethodSection = ({
                     <div className="text-sm text-slate-600">{method.description}</div>
                     {method.id === 'WALLET_BALANCE' && !canUseWallet && (
                       <div className="text-sm text-red-600 mt-1">
-                        Insufficient funds (need ${(orderTotal - user.wallet_balance).toFixed(2)} more)
+                        餘額不足 (需要 HKD {(orderTotal - user.wallet_balance).toFixed(2)} 更多)
                       </div>
                     )}
                   </div>
@@ -1363,7 +1363,7 @@ const AddressSelection = ({
         <div className="space-y-3">
           <h4 className="text-sm font-medium text-slate-700 flex items-center space-x-2">
             <Building className="w-4 h-4 text-indigo-600" />
-            <span>Saved Addresses</span>
+            <span>已儲存的地址</span>
           </h4>
           {addresses.map((address, index) => (
             <div
@@ -1385,7 +1385,7 @@ const AddressSelection = ({
                 <div className="flex-1">
                   <AddressDisplay address={address} />
                   {index === 0 && (
-                    <Badge variant="secondary" className="mt-2 text-xs">Default</Badge>
+                    <Badge variant="secondary" className="mt-2 text-xs">預設</Badge>
                   )}
                 </div>
               </div>
@@ -1401,7 +1401,7 @@ const AddressSelection = ({
         <div className="flex items-center justify-between">
           <h4 className="text-sm font-medium text-slate-700 flex items-center space-x-2">
             <Edit className="w-4 h-4 text-indigo-600" />
-            <span>{hasAddresses ? 'Or Enter New Address' : 'Enter Address'}</span>
+            <span>{hasAddresses ? '或輸入新地址' : '輸入地址'}</span>
           </h4>
           {hasAddresses && (
             <Button
@@ -1410,7 +1410,7 @@ const AddressSelection = ({
               onClick={() => toggleManualEntry && toggleManualEntry(type)}
               className="text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50"
             >
-              {showManualEntry?.[type] ? 'Use Saved Address' : 'Enter Manually'}
+              {showManualEntry?.[type] ? '使用已儲存的地址' : '手動輸入'}
             </Button>
           )}
         </div>
@@ -1426,7 +1426,7 @@ const AddressSelection = ({
             <ManualAddressForm
               address={manualAddress}
               onAddressChange={(field, value) => onManualAddressChange && onManualAddressChange(type, field, value)}
-              title="Address Details"
+              title="地址詳情"
             />
           </motion.div>
         )}
@@ -1440,7 +1440,7 @@ const AddressSelection = ({
           onClick={() => toggleManualEntry && toggleManualEntry(type)}
         >
           <Plus className="w-4 h-4 mr-2" />
-          Add New Address
+          新增地址
         </Button>
       )}
     </div>
@@ -1492,7 +1492,7 @@ const OrderSummaryCheckout = ({ cart, paymentMethod, onSubmit, submitting, deliv
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Package className="w-5 h-5 text-indigo-600" />
-            <span>Order Summary</span>
+            <span>訂單摘要</span>
           </div>
           <Button 
             variant="ghost" 
@@ -1511,12 +1511,12 @@ const OrderSummaryCheckout = ({ cart, paymentMethod, onSubmit, submitting, deliv
             {deliveryType === 'INSTANT' ? (
               <>
                 <Zap className="w-4 h-4 text-green-600" />
-                <span className="font-medium text-slate-900">Standard Delivery</span>
+                <span className="font-medium text-slate-900">標準運送</span>
               </>
             ) : (
               <>
                 <Calendar className="w-4 h-4 text-blue-600" />
-                <span className="font-medium text-slate-900">Scheduled for {scheduledDate}</span>
+                <span className="font-medium text-slate-900">預定於 {scheduledDate}</span>
               </>
             )}
           </div>
@@ -1552,11 +1552,11 @@ const OrderSummaryCheckout = ({ cart, paymentMethod, onSubmit, submitting, deliv
                       {item.product_name || `Product #${item.product_id.slice(-6)}`}
                     </div>
                     <div className="text-sm text-slate-600">
-                      Qty: {item.quantity} × ${item.finalPrice.toFixed(2)}
+                      數量: {item.quantity} × ${item.finalPrice.toFixed(2)}
                     </div>
                   </div>
                   <div className="text-sm font-medium">
-                    ${(item.finalPrice * item.quantity).toFixed(2)}
+                    HKD {(item.finalPrice * item.quantity).toFixed(2)}
                   </div>
                 </div>
               ))}
@@ -1568,42 +1568,42 @@ const OrderSummaryCheckout = ({ cart, paymentMethod, onSubmit, submitting, deliv
         {/* Pricing */}
         <div className="space-y-2">
           <div className="flex justify-between text-slate-600">
-            <span>Subtotal</span>
-            <span>${cart.discountInfo?.totalOriginalAmount?.toFixed(2) || '0.00'}</span>
+            <span>小計</span>
+            <span>HKD {cart.discountInfo?.totalOriginalAmount?.toFixed(2) || '0.00'}</span>
           </div>
           
           {cart.discountInfo?.hasDiscounts && (
             <div className="flex justify-between text-green-600">
               <span className="flex items-center space-x-1">
                 <Gift className="w-4 h-4" />
-                <span>Discounts</span>
+                <span>折扣</span>
               </span>
-              <span>-${cart.discountInfo.totalDiscountAmount.toFixed(2)}</span>
+              <span>-HKD {cart.discountInfo.totalDiscountAmount.toFixed(2)}</span>
             </div>
           )}
 
           <div className="flex justify-between text-slate-600">
-            <span>Shipping</span>
-            <span>Calculated at delivery</span>
+            <span>運送</span>
+            <span>送貨時計算</span>
           </div>
 
           <div className="flex justify-between text-slate-600">
-            <span>Tax</span>
-            <span>Will be calculated</span>
+            <span>稅金</span>
+            <span>將於稍後計算</span>
           </div>
         </div>
 
         <Separator className="my-4" />
 
         <div className="flex justify-between items-center text-xl font-bold text-slate-900">
-          <span>Estimated Total</span>
-          <span>${cart.total.toFixed(2)}</span>
+          <span>預估總額</span>
+          <span>HKD {cart.total.toFixed(2)}</span>
         </div>
 
         {/* Security */}
         <div className="flex items-center justify-center space-x-2 text-sm text-slate-500 pt-4">
           <Lock className="w-4 h-4 text-indigo-500" />
-          <span>256-bit SSL encryption</span>
+          <span>256位元SSL加密</span>
         </div>
       </CardContent>
       
@@ -1618,7 +1618,7 @@ const OrderSummaryCheckout = ({ cart, paymentMethod, onSubmit, submitting, deliv
             {submitting ? (
               <>
                 <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                <span>Processing...</span>
+                <span>處理中...</span>
                 <span className="absolute inset-0 bg-white/10"></span>
               </>
             ) : (
@@ -1651,16 +1651,16 @@ const OrderSuccess = ({ orderCode, deliveryType, scheduledDate }) => {
         <Card className="max-w-md w-full text-center overflow-hidden border-0 shadow-xl">
           <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-6 text-white">
             <CheckCircle className="w-16 h-16 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold">Order Confirmed!</h2>
+            <h2 className="text-2xl font-bold">訂單確認！</h2>
             {orderCode && (
               <Badge variant="secondary" className="mt-2 bg-white/20 text-white">
-                Order #{orderCode}
+                訂單 #{orderCode}
               </Badge>
             )}
           </div>
           <CardContent className="p-8">
             <p className="text-slate-600 mb-4">
-              Thank you for your purchase. A confirmation email with your order details has been sent to your email address.
+              感謝您的購買。我們已將包含訂單詳細資訊的確認信件寄至您的電子郵件地址。
             </p>
             
             {/* Delivery Information */}
@@ -1670,12 +1670,12 @@ const OrderSuccess = ({ orderCode, deliveryType, scheduledDate }) => {
                   {deliveryType === 'INSTANT' ? (
                     <>
                       <Package className="w-5 h-5 text-green-600" />
-                      <span className="font-medium text-slate-900">Standard Delivery</span>
+                      <span className="font-medium text-slate-900">標準運送</span>
                     </>
                   ) : (
                     <>
                       <Calendar className="w-5 h-5 text-blue-600" />
-                      <span className="font-medium text-slate-900">Scheduled for {scheduledDate}</span>
+                      <span className="font-medium text-slate-900">預定送達時間 {scheduledDate}</span>
                     </>
                   )}
                 </div>
@@ -1685,7 +1685,7 @@ const OrderSuccess = ({ orderCode, deliveryType, scheduledDate }) => {
             <div className="space-y-3">
               <Link href="/">
                 <Button className="w-full bg-indigo-600 hover:bg-indigo-700">
-                  Continue Shopping
+                 繼續購物
                 </Button>
               </Link>
             </div>

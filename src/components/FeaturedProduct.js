@@ -41,7 +41,7 @@ export default function FeaturedProducts() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/products/featured');
+        const response = await fetch('https://api.entsuki.com/api/products/featured');
         if (!response.ok) {
           throw new Error('Failed to fetch products');
         }

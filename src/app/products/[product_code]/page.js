@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { Star, Heart, ShoppingCart, Truck, Shield, RotateCcw, ChevronLeft, ChevronRight, Plus, Minus, Loader2 } from 'lucide-react';
+import { Star, Heart, ShoppingCart, Truck, Shield, RotateCcw, ChevronLeft, ChevronRight, Plus, Minus, Loader2, MessageSquare, Send } from 'lucide-react';
 import Cookies from 'js-cookie';
 import { toast } from 'sonner';
 
@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 
@@ -23,19 +24,30 @@ const ProductDetailScreen = () => {
   
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [qnaList, setQnaList] = useState([]);
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedVariants, setSelectedVariants] = useState({});
   const [isFavorite, setIsFavorite] = useState(false);
   const [addingToCart, setAddingToCart] = useState(false);
+  const [newQuestion, setNewQuestion] = useState('');
+  const [submittingQuestion, setSubmittingQuestion] = useState(false);
 
   useEffect(() => {
     if (product_code) {
       fetchProductData();
       fetchReviews();
+      fetchQnA();
     }
   }, [product_code]);
+
+  useEffect(() => {
+    if (product?._id) {
+      fetchRelatedProducts();
+    }
+  }, [product]);
 
   const fetchProductData = async () => {
     try {
@@ -69,11 +81,83 @@ const ProductDetailScreen = () => {
     }
   };
 
+  const fetchQnA = async () => {
+    try {
+      const response = await fetch(`https://api.entsuki.com/api/qna/product/${product_code}`);
+      const data = await response.json();
+      if (Array.isArray(data)) {
+        setQnaList(data);
+      } else if (data.success && data.data) {
+        setQnaList(data.data);
+      } else {
+        setQnaList([]);
+      }
+    } catch (error) {
+      console.error('Error fetching Q&A:', error);
+      setQnaList([]);
+    }
+  };
+
+  const fetchRelatedProducts = async () => {
+    try {
+      const response = await fetch(`https://api.entsuki.com/api/products/${product._id}/related`);
+      const data = await response.json();
+      if (data.success && data.data) {
+        setRelatedProducts(data.data.slice(0, 4)); // Limit to 4 products
+      } else {
+        setRelatedProducts([]);
+      }
+    } catch (error) {
+      console.error('Error fetching related products:', error);
+      setRelatedProducts([]);
+    }
+  };
+
   const handleVariantChange = (variantName, value) => {
     setSelectedVariants(prev => ({
       ...prev,
       [variantName]: value
     }));
+  };
+
+  const submitQuestion = async () => {
+    if (!newQuestion.trim()) {
+      toast.error('Please enter a question');
+      return;
+    }
+
+    setSubmittingQuestion(true);
+
+    try {
+      const response = await fetch('https://api.entsuki.com/api/qna/ask', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          product_code: product_code,
+          question: newQuestion.trim()
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success('Your question has been submitted successfully!');
+        setNewQuestion('');
+        // Add the new question to the list immediately
+        setQnaList(prev => [data, ...prev]);
+        // Also refresh the full Q&A list
+        fetchQnA();
+      } else {
+        toast.error('Failed to submit question');
+      }
+    } catch (error) {
+      console.error('Error submitting question:', error);
+      toast.error('Network error. Please try again.');
+    } finally {
+      setSubmittingQuestion(false);
+    }
   };
 
   const addToCart = async () => {
@@ -206,8 +290,8 @@ const ProductDetailScreen = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Product Not Found</h2>
-          <p className="text-gray-600">The product you're looking for doesn't exist.</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">找不到產品</h2>
+          <p className="text-gray-600">您正在尋找的產品不存在。</p>
         </div>
       </div>
     );
@@ -235,7 +319,7 @@ const ProductDetailScreen = () => {
               />
               {product.is_featured && (
                 <Badge className="absolute top-4 left-4 bg-red-500 hover:bg-red-600">
-                  Featured
+                  精選
                 </Badge>
               )}
               <Button
@@ -309,7 +393,7 @@ const ProductDetailScreen = () => {
                     ({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})
                   </span>
                 </div>
-                <Badge variant="outline">SKU: {product.product_sku}</Badge>
+                <Badge variant="outline">庫存單位 (SKU): {product.product_sku}</Badge>
               </div>
               <p className="text-lg text-gray-600 mb-6">
                 {product.short_description}
@@ -323,7 +407,7 @@ const ProductDetailScreen = () => {
               </div>
               <div className="flex items-center space-x-2 text-sm text-gray-600">
                 <span className={`font-medium ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+                  {product.stock > 0 ? `${product.stock} 有現貨` : '缺貨'}
                 </span>
               </div>
             </div>
@@ -331,7 +415,7 @@ const ProductDetailScreen = () => {
             {/* Variants */}
             {product.variants && product.variants.length > 0 && (
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900">Options</h3>
+                <h3 className="text-lg font-semibold text-gray-900">選項</h3>
                 {Object.entries(
                   product.variants.reduce((acc, variant) => {
                     if (!acc[variant.variant_name]) {
@@ -368,7 +452,7 @@ const ProductDetailScreen = () => {
             {/* Features */}
             {product.features && product.features.length > 0 && (
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">Features</h3>
+                <h3 className="text-lg font-semibold text-gray-900">產品特色</h3>
                 <div className="grid grid-cols-2 gap-3">
                   {product.features.map((feature) => (
                     <div key={feature._id} className="bg-white rounded-lg p-3 border">
@@ -387,7 +471,7 @@ const ProductDetailScreen = () => {
             {/* Quantity and Add to Cart */}
             <div className="space-y-4">
               <div className="flex items-center space-x-4">
-                <label className="text-sm font-medium text-gray-700">Quantity</label>
+                <label className="text-sm font-medium text-gray-700">數量</label>
                 <div className="flex items-center border rounded-lg">
                   <Button
                     variant="ghost"
@@ -419,12 +503,12 @@ const ProductDetailScreen = () => {
                   {addingToCart ? (
                     <>
                       <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Adding...
+                      添加中…
                     </>
                   ) : (
                     <>
                       <ShoppingCart className="w-5 h-5 mr-2" />
-                      Add to Cart
+                      加入購物車
                     </>
                   )}
                 </Button>
@@ -441,17 +525,14 @@ const ProductDetailScreen = () => {
 
             {/* Service Features */}
             <div className="grid grid-cols-3 gap-4 pt-6 border-t">
-              <div className="text-center">
-                <Truck className="w-6 h-6 mx-auto text-blue-600 mb-2" />
-                <div className="text-xs text-gray-600">Free Shipping</div>
-              </div>
+             
               <div className="text-center">
                 <Shield className="w-6 h-6 mx-auto text-green-600 mb-2" />
-                <div className="text-xs text-gray-600">2 Year Warranty</div>
+                <div className="text-xs text-gray-600">兩年保固</div>
               </div>
               <div className="text-center">
                 <RotateCcw className="w-6 h-6 mx-auto text-orange-600 mb-2" />
-                <div className="text-xs text-gray-600">30-Day Returns</div>
+                <div className="text-xs text-gray-600">30 天退貨</div>
               </div>
             </div>
           </div>
@@ -460,17 +541,20 @@ const ProductDetailScreen = () => {
         {/* Product Details and Reviews Tabs */}
         <Card className="mt-8">
           <Tabs defaultValue="details" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="details">Product Details</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="details">產品詳情</TabsTrigger>
               <TabsTrigger value="reviews">
-                Reviews ({reviews.length})
+                評論 ({reviews.length})
+              </TabsTrigger>
+              <TabsTrigger value="qna">
+                問答 ({qnaList.length})
               </TabsTrigger>
             </TabsList>
             
             <TabsContent value="details" className="mt-6">
               <CardContent className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">Description</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">產品描述</h3>
                   <p className="text-gray-700 leading-relaxed">
                     {product.long_description}
                   </p>
@@ -478,7 +562,7 @@ const ProductDetailScreen = () => {
 
                 {product.features && product.features.length > 0 && (
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Specifications</h3>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">產品規格</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {product.features.map((feature) => (
                         <div key={feature._id} className="flex justify-between py-2 border-b border-gray-200">
@@ -570,30 +654,167 @@ const ProductDetailScreen = () => {
                     <div className="text-gray-400 mb-4">
                       <Star className="w-12 h-12 mx-auto" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No reviews yet</h3>
-                    <p className="text-gray-600">Be the first to review this product!</p>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">尚無評論</h3>
+                    <p className="text-gray-600">成為第一個評論此產品的人！</p>
                   </div>
                 )}
+              </CardContent>
+            </TabsContent>
+
+            <TabsContent value="qna" className="mt-6">
+              <CardContent>
+                <div className="space-y-6">
+                  {/* Ask Question Section */}
+                  <div className="bg-gray-50 rounded-lg p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">提出問題</h3>
+                    <div className="space-y-4">
+                      <Textarea
+                        placeholder="What would you like to know about this product?"
+                        value={newQuestion}
+                        onChange={(e) => setNewQuestion(e.target.value)}
+                        className="min-h-[100px]"
+                        disabled={submittingQuestion}
+                      />
+                      <div className="flex justify-end">
+                        <Button 
+                          onClick={submitQuestion}
+                          disabled={submittingQuestion || !newQuestion.trim()}
+                        >
+                          {submittingQuestion ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              提交中…
+                            </>
+                          ) : (
+                            <>
+                              <Send className="w-4 h-4 mr-2" />
+                              提交問題
+                            </>
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Q&A List */}
+                  {qnaList.length > 0 ? (
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-semibold text-gray-900">問題與答案</h3>
+                      {qnaList.map((qna) => (
+                        <Card key={qna._id} className="border border-gray-200">
+                          <CardContent className="p-6">
+                            <div className="space-y-4">
+                              {/* Question */}
+                              <div className="flex items-start space-x-3">
+                                <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                  <span className="text-sm font-semibold text-blue-600">Q</span>
+                                </div>
+                                <div className="flex-1">
+                                  <p className="text-gray-900 font-medium">{qna.question}</p>
+                                  <div className="text-xs text-gray-500 mt-1">
+                                    {new Date(qna.createdAt).toLocaleDateString('en-US', {
+                                      year: 'numeric',
+                                      month: 'long',
+                                      day: 'numeric'
+                                    })}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Answer */}
+                              {qna.answer && qna.answer.trim() !== '' && (
+                                <div className="flex items-start space-x-3 ml-4 pl-4 border-l-2 border-gray-100">
+                                  <div className="flex-shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                    <span className="text-sm font-semibold text-green-600">A</span>
+                                  </div>
+                                  <div className="flex-1">
+                                    <p className="text-gray-700">{qna.answer}</p>
+                                    <div className="text-xs text-gray-500 mt-1">
+                                      {new Date(qna.updatedAt).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric'
+                                      })}
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+
+                              {(!qna.answer || qna.answer.trim() === '') && (
+                                <div className="ml-11 text-sm text-gray-500 italic">
+                                  等待回覆中…
+                                </div>
+                              )}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <div className="text-gray-400 mb-4">
+                        <MessageSquare className="w-12 h-12 mx-auto" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">尚無任何問題</h3>
+                      <p className="text-gray-600">成為第一個對此產品提問的人！</p>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </TabsContent>
           </Tabs>
         </Card>
 
-        {/* Related Products Section Placeholder */}
+        {/* Related Products Section */}
         <div className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">You might also like</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">您可能也會喜歡</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardContent className="p-4">
-                  <div className="aspect-square bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                    <span className="text-gray-400 text-sm">Related Product {index + 1}</span>
-                  </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Related Product Name</h3>
-                  <div className="text-lg font-bold text-blue-600">$99.99</div>
-                </CardContent>
-              </Card>
-            ))}
+            {relatedProducts.length > 0 ? (
+              relatedProducts.map((relatedProduct) => (
+                <Card key={relatedProduct._id} className="hover:shadow-lg transition-shadow cursor-pointer group">
+                  <CardContent className="p-4">
+                    <div className="aspect-square bg-gray-200 rounded-lg mb-4 overflow-hidden">
+                      <img
+                        src={relatedProduct.productImages[0] || '/placeholder-product.jpg'}
+                        alt={relatedProduct.product_name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                        onClick={() => router.push(`/products/${relatedProduct.product_code}`)}
+                      />
+                    </div>
+                    <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                      {relatedProduct.product_name}
+                    </h3>
+                    <div className="flex items-center justify-between">
+                      <div className="text-lg font-bold text-blue-600">
+                        {formatPrice(relatedProduct.price)}
+                      </div>
+                      {relatedProduct.is_featured && (
+                        <Badge className="bg-red-500 hover:bg-red-600 text-xs">
+                          Featured
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="text-sm text-gray-600 mt-1">
+                      {relatedProduct.stock > 0 ? (
+                        <span className="text-green-600">In Stock</span>
+                      ) : (
+                        <span className="text-red-600">Out of Stock</span>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              Array.from({ length: 4 }).map((_, index) => (
+                <Card key={index} className="animate-pulse">
+                  <CardContent className="p-4">
+                    <div className="aspect-square bg-gray-200 rounded-lg mb-4"></div>
+                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
         </div>
       </div>

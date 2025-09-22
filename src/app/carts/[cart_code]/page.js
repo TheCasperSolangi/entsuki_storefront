@@ -170,7 +170,7 @@ const CartScreen = () => {
       };
 
       // Fetch delivery charges from Bajgo API
-      const deliveryResponse = await fetch('http://localhost:5000/api/lalamove/quotation', {
+      const deliveryResponse = await fetch('https://api.entsuki.com/api/lalamove/quotation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -395,7 +395,7 @@ const DeliveryStatusCard = ({
           <div className="flex items-center space-x-2">
             <CheckCircle className="w-5 h-5 text-green-600" />
             <span className="text-green-800 font-medium">
-              Delivery charges calculated and added to your cart
+              運費已計算並加入您的購物車
             </span>
           </div>
         </CardContent>
@@ -463,7 +463,7 @@ const ProductCard = ({ item, onUpdateQuantity, onRemove, isUpdating }) => {
             <div className="flex justify-between items-start">
               <div className="flex-1">
                 <h3 className="text-lg font-semibold text-slate-900 truncate">
-                  Product #{item.product_id.slice(-6)}
+                  {item.product_name.slice(0)}...
                 </h3>
                 
                 {/* Price Information */}
@@ -572,8 +572,8 @@ const OrderSummary = ({ cart }) => {
         {/* Pricing Breakdown */}
         <div className="space-y-3">
           <div className="flex justify-between text-slate-600">
-            <span>Subtotal</span>
-            <span>${subtotal.toFixed(2)}</span>
+            <span>小計</span>
+            <span>HKD {subtotal.toFixed(2)}</span>
           </div>
           
           {discountAmount > 0 && (
@@ -582,14 +582,14 @@ const OrderSummary = ({ cart }) => {
                 <Gift className="w-4 h-4" />
                 <span>Discounts</span>
               </span>
-              <span>-${discountAmount.toFixed(2)}</span>
+              <span>-HKD {discountAmount.toFixed(2)}</span>
             </div>
           )}
 
           {cart.subtotal?.map((adjustment, index) => (
             <div key={index} className="flex justify-between text-slate-600">
               <span>{adjustment.name}</span>
-              <span>${adjustment.value.toFixed(2)}</span>
+              <span>HKD {adjustment.value.toFixed(2)}</span>
             </div>
           ))}
         </div>
@@ -598,19 +598,19 @@ const OrderSummary = ({ cart }) => {
 
         {/* Total */}
         <div className="flex justify-between items-center text-xl font-bold text-slate-900">
-          <span>Total</span>
-          <span>${total.toFixed(2)}</span>
+          <span>總計</span>
+          <span>HKD {total.toFixed(2)}</span>
         </div>
 
         {/* Savings Summary */}
         {discountAmount > 0 && (
           <div className="bg-green-50 border border-green-200 rounded-lg p-3">
             <div className="flex items-center justify-between">
-              <span className="text-green-800 font-medium">You saved</span>
+              <span className="text-green-800 font-medium">您已節省</span>
               <span className="text-green-800 font-bold">${discountAmount.toFixed(2)}</span>
             </div>
             <div className="text-sm text-green-600 mt-1">
-              {cart.savingsPercentage}% off your order
+              {cart.savingsPercentage}% 折扣優惠
             </div>
           </div>
         )}
@@ -618,13 +618,13 @@ const OrderSummary = ({ cart }) => {
         {/* Action Buttons */}
         <div className="space-y-3 pt-4">
           <Link href={href}>
-            <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3">
-              Proceed to Checkout
+            <Button className="w-full bg-[#b8935f]  text-white font-medium py-3">
+              前往結帳
             </Button>
           </Link>
           <Link href="/">
             <Button variant="outline" className="w-full">
-              Continue Shopping
+             繼續購物
             </Button>
           </Link>
         </div>
@@ -632,7 +632,7 @@ const OrderSummary = ({ cart }) => {
         {/* Security Badge */}
         <div className="flex items-center justify-center space-x-2 text-sm text-slate-500 pt-4">
           <Star className="w-4 h-4" />
-          <span>Secure checkout guaranteed</span>
+          <span>保證安全結帳</span>
         </div>
       </CardContent>
     </Card>
@@ -647,11 +647,11 @@ const EmptyCart = () => {
           <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <ShoppingCart className="w-12 h-12 text-slate-400" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Your cart is empty</h2>
-          <p className="text-slate-600 mb-6">Add some products to get started</p>
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">您的購物車是空的</h2>
+          <p className="text-slate-600 mb-6">請添加商品以開始購物</p>
           <Link href="/">
-            <Button className="w-full bg-indigo-600 hover:bg-indigo-700">
-              Start Shopping
+            <Button className="w-full bg-[#b8935f] ">
+              開始購物
             </Button>
           </Link>
         </CardContent>

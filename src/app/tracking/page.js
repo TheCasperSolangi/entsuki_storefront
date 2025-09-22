@@ -64,9 +64,9 @@ export default function TrackOrderPage() {
       <Header />
       <main className="max-w-6xl mx-auto px-6 py-16 space-y-8">
         <div className="text-center">
-          <h1 className="text-4xl font-bold">Track Your Order</h1>
+          <h1 className="text-4xl font-bold">追蹤您的訂單</h1>
           <p className="mt-2 text-gray-600">
-            Enter your order number to check the current status
+           請輸入您的訂單編號以查詢目前狀態
           </p>
         </div>
 
@@ -80,7 +80,7 @@ export default function TrackOrderPage() {
                 type="text"
                 value={orderCode}
                 onChange={(e) => setOrderCode(e.target.value)}
-                placeholder="Enter order number (e.g. S6MIU9FCVA)"
+                placeholder="請輸入訂單編號（例如：S6MIU9FCVA）"
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary"
                 required
               />
@@ -88,7 +88,7 @@ export default function TrackOrderPage() {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-3 bg-primary text-white font-medium rounded-lg hover:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+              className="px-6 py-3 bg-[#b8935f] y text-white font-medium rounded-lg hover:bg-[#b8935f]  disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
             >
               {loading ? (
                 <>
@@ -96,10 +96,10 @@ export default function TrackOrderPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Tracking...
+                  追蹤中...
                 </>
               ) : (
-                "Track Order"
+                "追蹤訂單"
               )}
             </button>
           </form>
@@ -163,9 +163,9 @@ export default function TrackOrderPage() {
 
         <div className="text-center text-sm text-gray-500">
           <p>
-            Can't find your order? Contact us at{" "}
-            <a href="mailto:support@example.com" className="text-primary hover:underline">
-              support@bajgo.com
+            找不到您的訂單嗎？請透過以下方式聯絡我們{" "}
+            <a href="mailto:support@entsuki.com" className="text-primary hover:underline">
+              support@entsuki.com
             </a>
           </p>
         </div>
