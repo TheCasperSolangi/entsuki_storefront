@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
   // Environment configuration for notifications
 const NotificationConfig = {
-  apiUrl: 'https://api.entsuki.com/api',
+  apiUrl: 'http://localhost:5000/api',
   wsUrl: process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:5000',
   enableWebSocket: process.env.NEXT_PUBLIC_ENABLE_WS !== 'false',
   pollInterval: parseInt(process.env.NEXT_PUBLIC_NOTIFICATION_POLL_INTERVAL || '30000'),

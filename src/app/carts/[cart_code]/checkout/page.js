@@ -173,7 +173,7 @@ const toggleManualEntry = (type) => {
     }));
   }
 };
-  const API_BASE_URL = `https://api.entsuki.com/api`;
+  const API_BASE_URL = `http://localhost:5000/api`;
 
   // Get auth token from cookies
   const getAuthToken = () => {

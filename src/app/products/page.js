@@ -57,7 +57,7 @@ const ProductCatalogueContent = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`https://api.entsuki.com/api/products`);
+        const response = await fetch(`http://localhost:5000/api/products`);
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -219,7 +219,7 @@ const ProductCard = ({ product }) => (
         </div>
       )}
       {product.is_featured && (
-        <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-semibold">
+        <div className="absolute top-2 left-2 bg-[#b8935f] text-white px-2 py-1 rounded text-xs font-semibold">
           Featured
         </div>
       )}

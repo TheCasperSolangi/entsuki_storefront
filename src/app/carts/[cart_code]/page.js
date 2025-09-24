@@ -38,7 +38,7 @@ const CartScreen = () => {
   const [deliveryChargesLoaded, setDeliveryChargesLoaded] = useState(false);
   const [locationPermissionDenied, setLocationPermissionDenied] = useState(false);
  
-  const API_BASE_URL = `https://api.entsuki.com/api`;
+  const API_BASE_URL = `http://localhost:5000/api`;
 
   // Fetch cart data
   useEffect(() => {
@@ -85,7 +85,7 @@ const CartScreen = () => {
       // Don't show full loading state for delivery charges
       
       // Get store coordinates from settings API
-      const storeResponse = await fetch(`https://api.entsuki.com/api/store/settings`);
+      const storeResponse = await fetch(`http://localhost:5000/api/store/settings`);
       const storeData = await storeResponse.json();
       
       if (storeResponse.status == 304) {
@@ -170,7 +170,7 @@ const CartScreen = () => {
       };
 
       // Fetch delivery charges from Bajgo API
-      const deliveryResponse = await fetch('https://api.entsuki.com/api/lalamove/quotation', {
+      const deliveryResponse = await fetch('http://localhost:5000/api/lalamove/quotation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

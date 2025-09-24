@@ -140,7 +140,7 @@ export default function Header() {
   useEffect(() => {
     const fetchStoreSettings = async () => {
       try {
-        const res = await fetch(`https://api.entsuki.com/api/store/settings`);
+        const res = await fetch(`http://localhost:5000/api/store/settings`);
         if (!res.ok) throw new Error("無法獲取商店設定");
 
         const data = await res.json();
@@ -214,7 +214,7 @@ export default function Header() {
   const handleGuestLogin = async () => {
     setIsGuestLoginLoading(true);
     try {
-      const response = await fetch('https://api.entsuki.com/api/auth/guest-login', {
+      const response = await fetch('http://localhost:5000/api/auth/guest-login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -263,7 +263,7 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       // Call logout endpoint
-      await fetch(`https://api.entsuki.com/api/auth/logout`, {
+      await fetch(`http://localhost:5000/api/auth/logout`, {
         method: 'POST',
         credentials: 'include',
       });
@@ -290,7 +290,7 @@ export default function Header() {
       if (!cart_code) return;
 
       try {
-        const res = await fetch(`https://api.entsuki.com/api/carts/code/${cart_code}`);
+        const res = await fetch(`http://localhost:5000/api/carts/code/${cart_code}`);
         if (!res.ok) throw new Error("無法獲取購物車");
 
         const data = await res.json();
@@ -481,7 +481,7 @@ export default function Header() {
                           </Link>
                           
                           <Link 
-                            href="/signup"
+                            href="/auth?signup=true"
                             className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full"
                           >
                             註冊
@@ -493,8 +493,8 @@ export default function Header() {
                 </div>
               </div>
 
-              {/* Notification dropdown */}
-              <NotificationDropdown />
+          {/* Notification dropdown - only for regular users */}
+          {isRegularUser && <NotificationDropdown />}
 
               <Link href={href} className="p-2 text-gray-700 hover:text-gray-900 relative">
                 <span className="sr-only">購物車</span>
@@ -648,7 +648,7 @@ export default function Header() {
                 </Link>
                 
                 <Link 
-                  href="/signup"
+                  href="/auth?signup=true"
                   className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full"
                   onClick={() => setMobileMenuOpen(false)}
                 >

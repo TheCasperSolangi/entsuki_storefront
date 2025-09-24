@@ -34,7 +34,7 @@ const ProductDetailScreen = () => {
   const [addingToCart, setAddingToCart] = useState(false);
   const [newQuestion, setNewQuestion] = useState('');
   const [submittingQuestion, setSubmittingQuestion] = useState(false);
-
+  const [userType, setUserType] = useState('guest');
   useEffect(() => {
     if (product_code) {
       fetchProductData();
@@ -42,7 +42,10 @@ const ProductDetailScreen = () => {
       fetchQnA();
     }
   }, [product_code]);
-
+  useEffect(() => {
+    const storedUserType = Cookies.get('user_type') || 'guest';
+    setUserType(storedUserType);
+  }, []);
   useEffect(() => {
     if (product?._id) {
       fetchRelatedProducts();
@@ -51,7 +54,7 @@ const ProductDetailScreen = () => {
 
   const fetchProductData = async () => {
     try {
-      const response = await fetch(`https://api.entsuki.com/api/products/by-code/${product_code}`);
+      const response = await fetch(`http://localhost:5000/api/products/by-code/${product_code}`);
       const data = await response.json();
       if (data.success) {
         setProduct(data.data);
@@ -69,7 +72,7 @@ const ProductDetailScreen = () => {
 
   const fetchReviews = async () => {
     try {
-      const response = await fetch(`https://api.entsuki.com/api/reviews/product/${product_code}`);
+      const response = await fetch(`http://localhost:5000/api/reviews/product/${product_code}`);
       const data = await response.json();
       if (data.success) {
         setReviews(data.data);
@@ -83,7 +86,7 @@ const ProductDetailScreen = () => {
 
   const fetchQnA = async () => {
     try {
-      const response = await fetch(`https://api.entsuki.com/api/qna/product/${product_code}`);
+      const response = await fetch(`http://localhost:5000/api/qna/product/${product_code}`);
       const data = await response.json();
       if (Array.isArray(data)) {
         setQnaList(data);
@@ -100,7 +103,7 @@ const ProductDetailScreen = () => {
 
   const fetchRelatedProducts = async () => {
     try {
-      const response = await fetch(`https://api.entsuki.com/api/products/${product._id}/related`);
+      const response = await fetch(`http://localhost:5000/api/products/${product._id}/related`);
       const data = await response.json();
       if (data.success && data.data) {
         setRelatedProducts(data.data.slice(0, 4)); // Limit to 4 products
@@ -121,6 +124,10 @@ const ProductDetailScreen = () => {
   };
 
   const submitQuestion = async () => {
+        if (userType === 'guest') {
+      toast.error('Guests cannot submit questions. Please log in.');
+      return;
+    }
     if (!newQuestion.trim()) {
       toast.error('Please enter a question');
       return;
@@ -129,7 +136,7 @@ const ProductDetailScreen = () => {
     setSubmittingQuestion(true);
 
     try {
-      const response = await fetch('https://api.entsuki.com/api/qna/ask', {
+      const response = await fetch('http://localhost:5000/api/qna/ask', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -181,7 +188,7 @@ const ProductDetailScreen = () => {
     setAddingToCart(true);
 
     try {
-      const response = await fetch(`https://api.entsuki.com/api/carts/${cart_code}/add-product`, {
+      const response = await fetch(`http://localhost:5000/api/carts/${cart_code}/add-product`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -232,7 +239,7 @@ const ProductDetailScreen = () => {
     setAddingToCart(true);
 
     try {
-      const response = await fetch(`https://api.entsuki.com/api/carts/${cart_code}/add-product`, {
+      const response = await fetch(`http://localhost:5000/api/carts/${cart_code}/add-product`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -664,21 +671,26 @@ const ProductDetailScreen = () => {
             <TabsContent value="qna" className="mt-6">
               <CardContent>
                 <div className="space-y-6">
-                  {/* Ask Question Section */}
+                 {/* Ask Question Section */}
                   <div className="bg-gray-50 rounded-lg p-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">提出問題</h3>
                     <div className="space-y-4">
+                      {userType === 'guest' && (
+                        <div className="text-red-500 text-sm mb-2">
+                         Please login to ask questions
+                        </div>
+                      )}
                       <Textarea
                         placeholder="What would you like to know about this product?"
                         value={newQuestion}
                         onChange={(e) => setNewQuestion(e.target.value)}
                         className="min-h-[100px]"
-                        disabled={submittingQuestion}
+                        disabled={submittingQuestion || userType === 'guest'}
                       />
                       <div className="flex justify-end">
                         <Button 
                           onClick={submitQuestion}
-                          disabled={submittingQuestion || !newQuestion.trim()}
+                          disabled={submittingQuestion || !newQuestion.trim() || userType === 'guest'}
                         >
                           {submittingQuestion ? (
                             <>

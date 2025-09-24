@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,8 +14,9 @@ import ReactFacebookLogin from "react-facebook-login";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-export default function AuthPage() {
-   const router = useRouter();
+// Separate component for handling search params
+function AuthPageContent() {
+  const router = useRouter();
   const { loginSuccess } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -48,8 +49,17 @@ export default function AuthPage() {
     cart_code: "",
     session_id: "",
     onesignal_id: "",
-  
+    ip_address: "",
   });
+
+  // Handle search params
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("signup") === "true") {
+      setIsLogin(false);
+    }
+  }, [searchParams]);
 
   // Collect device + browser info on mount
   useEffect(() => {
@@ -71,10 +81,10 @@ export default function AuthPage() {
       model,
       cart_code: Cookies.get("cart_code") || "",
       session_id: Cookies.get("session_id") || crypto.randomUUID(),
-      onesignal_id: localStorage.getItem("onesignal_id") || "",
+      onesignal_id: typeof window !== 'undefined' ? (localStorage.getItem("onesignal_id") || "") : "",
     }));
 
-   // Fetch IP address using multiple fallback methods
+    // Fetch IP address using multiple fallback methods
     const fetchIP = async () => {
       try {
         // Try first method
@@ -82,7 +92,7 @@ export default function AuthPage() {
         if (response.ok) {
           const data = await response.json();
           setDeviceInfo((prev) => ({ ...prev, ip_address: data.ip }));
-          console.log(`${ip_address}`);
+          console.log(`IP: ${data.ip}`);
           return;
         }
         
@@ -91,7 +101,7 @@ export default function AuthPage() {
         if (response2.ok) {
           const data = await response2.json();
           setDeviceInfo((prev) => ({ ...prev, ip_address: data.ip }));
-             console.log(`${ip_address}`);
+          console.log(`IP: ${data.ip}`);
           return;
         }
         
@@ -100,7 +110,7 @@ export default function AuthPage() {
         if (response3.ok) {
           const data = await response3.json();
           setDeviceInfo((prev) => ({ ...prev, ip_address: data.ip }));
-             console.log(`${ip_address}`);
+          console.log(`IP: ${data.ip}`);
           return;
         }
         
@@ -114,7 +124,8 @@ export default function AuthPage() {
 
     fetchIP();
   }, []);
- const handleLogin = async (e) => {
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setAlert({ type: "", message: "" });
@@ -124,7 +135,6 @@ export default function AuthPage() {
         emailOrUsername,
         password,
         ...deviceInfo,
-       
       };
 
       const res = await fetch(
@@ -275,7 +285,7 @@ export default function AuthPage() {
               signupStep > step
                 ? "bg-green-500 border-green-500 text-white"
                 : signupStep === step
-                ? "bg-red-600 border-red-600 text-white"
+                ? "bg-[#b8935f] border-[#b8935f] text-white"
                 : "border-gray-300 text-gray-400"
             }`}
           >
@@ -480,11 +490,8 @@ export default function AuthPage() {
   };
 
   return (
-    <>
-    <Header />
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-   
         {/* Main Card */}
         <div className="bg-white shadow-2xl rounded-3xl p-8">
           {/* Header */}
@@ -700,7 +707,39 @@ export default function AuthPage() {
         </div>
       </div>
     </div>
-    <Footer />
+  );
+}
+
+// Loading component for Suspense fallback
+function AuthPageLoading() {
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-white shadow-2xl rounded-3xl p-8">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-300 rounded mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded mb-6"></div>
+            <div className="space-y-4">
+              <div className="h-10 bg-gray-200 rounded"></div>
+              <div className="h-10 bg-gray-200 rounded"></div>
+              <div className="h-10 bg-gray-200 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Main export component with Suspense boundary
+export default function AuthPage() {
+  return (
+    <>
+      <Header />
+      <Suspense fallback={<AuthPageLoading />}>
+        <AuthPageContent />
+      </Suspense>
+      <Footer />
     </>
   );
 }

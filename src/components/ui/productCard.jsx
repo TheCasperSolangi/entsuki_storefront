@@ -1,160 +1,131 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { HeartIcon, StarIcon } from "@heroicons/react/24/outline";
-import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
-import { useCart } from "../../context/cartContext"; // ✅ use your CartContext
+import { Star, Plus } from "lucide-react";
+import { useCart } from "../../context/cartContext";
 
 export default function ProductCard({ product, onFavoriteToggle }) {
   const [isFavorite, setIsFavorite] = useState(product.isFavorite || false);
-  const [loading, setLoading] = useState(false);
-
-  const { addToCart } = useCart(); // ✅ grab from context
+  
+  // Use cart context
+  const { addToCart, updating: cartUpdating, user } = useCart();
 
   const handleFavoriteClick = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsFavorite(!isFavorite);
     if (onFavoriteToggle) onFavoriteToggle(product.id);
   };
 
-  const handleAddToCart = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const result = await addToCart(product.id, 1); // ✅ use context
-      if (!result.success) {
-        console.error(result.error);
-      }
-    } catch (err) {
-      console.error("Error adding product:", err);
-    } finally {
-      setLoading(false);
-    }
+  // Handle view details
+  const handleViewDetails = (productCode) => {
+    window.location.href = `/products/${productCode || product.id}`;
   };
 
-  const getBadgeColor = (badge) => {
-    switch (badge) {
-      case "new":
-        return "bg-green-500";
-      case "hot":
-        return "bg-red-500";
-      case "sale":
-        return "bg-amber-500";
-      case "limited":
-        return "bg-purple-500";
-      default:
-        return "bg-gray-500";
+  // Handle add to cart - matches the catalogue version exactly
+  const handleAddToCart = async (productId) => {
+    if (!user) {
+      toast.error('Please login to add items to your cart');
+      return;
     }
-  };
 
-  const getBadgeText = (badge) => {
-    switch (badge) {
-      case "new":
-        return "新品";
-      case "hot":
-        return "熱賣";
-      case "sale":
-        return "特價";
-      case "limited":
-        return "限量";
-      default:
-        return badge;
+    const result = await addToCart(productId, 1);
+    
+    if (!result.success) {
+      // Error handling is already done in the context
+      console.error('Failed to add to cart:', result.error);
     }
+    // Success handling is also done in the context
   };
 
   return (
-    <div className="group relative bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-      <Link href={`/products/${product.id}`}>
-        <div className="relative aspect-square overflow-hidden bg-gray-100">
-          {product.images[0] ? (
-            <Image
-              src={product.images[0]}
-              alt={product.name}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
-              <span className="text-6xl">☕</span>
-            </div>
-          )}
+    <div
+      onClick={() => handleViewDetails(product.product_code || product.id)}
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+    >
+      <div className="relative">
+        <img
+          src={product.productImages?.[0] || product.images?.[0] || '/api/placeholder/300/300'}
+          alt={product.product_name || product.name}
+          className="w-full h-48 object-cover"
+        />
+        {product.stock === 0 && (
+          <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+            <span className="text-white font-semibold">Out of Stock</span>
+          </div>
+        )}
+        {product.is_featured && (
+          <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-semibold">
+            Featured
+          </div>
+        )}
+      </div>
 
-          {product.badge && (
+      <div className="p-4">
+        <h3 className="font-semibold text-lg text-gray-800 mb-2 line-clamp-2">
+          {product.product_name || product.name}
+        </h3>
+
+        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+          {product.short_description || product.description}
+        </p>
+
+        <div className="flex items-center mb-3">
+          <div className="flex items-center">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`h-4 w-4 ${
+                  i < Math.floor(product.ratings || product.rating || 0)
+                    ? 'text-yellow-400 fill-current'
+                    : 'text-gray-300'
+                }`}
+              />
+            ))}
+          </div>
+          <span className="text-sm text-gray-600 ml-2">({product.ratings || product.rating || 0})</span>
+        </div>
+
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-2xl font-bold text-[#b8935f]">
+            HKD {product.price}
+          </span>
+          <span className="text-sm text-gray-500">
+            Stock: {product.stock}
+          </span>
+        </div>
+
+        <div className="flex flex-wrap gap-1 mb-3">
+          {product.features?.slice(0, 4).map((feature, index) => (
             <span
-              className={`absolute top-2 left-2 px-3 py-1 text-xs font-semibold text-white rounded-full ${getBadgeColor(
-                product.badge
-              )}`}
+              key={index}
+              className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded"
             >
-              {getBadgeText(product.badge)}
+              {feature.feature_name}: {feature.feature_value}
             </span>
-          )}
+          ))}
+        </div>
 
-          {/* Favorite Button */}
+        <div className="flex gap-2">
           <button
-            onClick={handleFavoriteClick}
-            className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-all duration-200"
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent card click
+              handleAddToCart(product.product_code || product.id); // use product_code or id
+            }}
+            disabled={product.stock === 0 || cartUpdating || !user}
+            className="flex-1 bg-[#b8935f] text-white px-4 py-2 rounded-md hover:bg-[#a8834f] disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center gap-2"
           >
-            {isFavorite ? (
-              <HeartIconSolid className="h-5 w-5 text-red-500" />
+            {cartUpdating ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
             ) : (
-              <HeartIcon className="h-5 w-5 text-gray-600 hover:text-red-500" />
+              <>
+                <Plus className="h-4 w-4" />
+                Add to Cart
+              </>
             )}
           </button>
-
-          {/* Add to Cart Button */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              onClick={handleAddToCart}
-              disabled={loading}
-              className="w-full py-2 bg-white text-gray-900 font-medium rounded-lg hover:bg-amber-50 transition-colors duration-200 disabled:opacity-50"
-            >
-              {loading ? "Adding..." : "Add To Cart"}
-            </button>
-          </div>
         </div>
-
-        <div className="p-4">
-          <h3 className="font-medium text-gray-900 mb-2 line-clamp-2 group-hover:text-amber-600 transition-colors duration-200">
-            {product.name}
-          </h3>
-
-          <div className="flex items-center justify-between mb-2">
-            <div>
-              <span className="text-xl font-bold text-amber-600">
-                HK${product.price}
-              </span>
-              {product.originalPrice &&
-                product.originalPrice > product.price && (
-                  <span className="ml-2 text-sm text-gray-500 line-through">
-                    HK${product.originalPrice}
-                  </span>
-                )}
-            </div>
-          </div>
-
-          {product.rating > 0 && (
-            <div className="flex items-center text-sm text-gray-600">
-              <div className="flex items-center mr-2">
-                {[...Array(5)].map((_, i) => (
-                  <StarIcon
-                    key={i}
-                    className={`h-4 w-4 ${
-                      i < Math.floor(product.rating)
-                        ? "text-yellow-400 fill-current"
-                        : "text-gray-300"
-                    }`}
-                  />
-                ))}
-              </div>
-              <span>({product.reviewCount})</span>
-            </div>
-          )}
-        </div>
-      </Link>
+      </div>
     </div>
   );
 }
