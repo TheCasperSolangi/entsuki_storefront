@@ -44,7 +44,7 @@ import {
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
-const API_BASE_URL = `http://localhost:5000`;
+const API_BASE_URL = `https://api.entsuki.com`;
 
 export default function ProfilePage() {
   const { user: authUser, loading: authLoading, logout } = useAuth();

@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/me`, {
+      const res = await fetch(`https://api.entsuki.com/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error("Not authenticated");
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
   // 🔹 For Google/Facebook login directly
   const socialLogin = async (providerToken, provider) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/social-login`, {
+      const res = await fetch(`https://api.entsuki.com/api/auth/social-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ provider, token: providerToken }),

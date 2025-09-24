@@ -140,7 +140,7 @@ export default function Header() {
   useEffect(() => {
     const fetchStoreSettings = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/store/settings`);
+        const res = await fetch(`https://api.entsuki.com/api/store/settings`);
         if (!res.ok) throw new Error("無法獲取商店設定");
 
         const data = await res.json();
@@ -214,7 +214,7 @@ export default function Header() {
   const handleGuestLogin = async () => {
     setIsGuestLoginLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/auth/guest-login', {
+      const response = await fetch('https://api.entsuki.com/api/auth/guest-login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -263,7 +263,7 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       // Call logout endpoint
-      await fetch(`http://localhost:5000/api/auth/logout`, {
+      await fetch(`https://api.entsuki.com/api/auth/logout`, {
         method: 'POST',
         credentials: 'include',
       });
@@ -290,7 +290,7 @@ export default function Header() {
       if (!cart_code) return;
 
       try {
-        const res = await fetch(`http://localhost:5000/api/carts/code/${cart_code}`);
+        const res = await fetch(`https://api.entsuki.com/api/carts/code/${cart_code}`);
         if (!res.ok) throw new Error("無法獲取購物車");
 
         const data = await res.json();

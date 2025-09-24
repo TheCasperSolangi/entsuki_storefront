@@ -54,7 +54,7 @@ const ProductDetailScreen = () => {
 
   const fetchProductData = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/products/by-code/${product_code}`);
+      const response = await fetch(`https://api.entsuki.com/api/products/by-code/${product_code}`);
       const data = await response.json();
       if (data.success) {
         setProduct(data.data);
@@ -72,7 +72,7 @@ const ProductDetailScreen = () => {
 
   const fetchReviews = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/reviews/product/${product_code}`);
+      const response = await fetch(`https://api.entsuki.com/api/reviews/product/${product_code}`);
       const data = await response.json();
       if (data.success) {
         setReviews(data.data);
@@ -86,7 +86,7 @@ const ProductDetailScreen = () => {
 
   const fetchQnA = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/qna/product/${product_code}`);
+      const response = await fetch(`https://api.entsuki.com/api/qna/product/${product_code}`);
       const data = await response.json();
       if (Array.isArray(data)) {
         setQnaList(data);
@@ -103,7 +103,7 @@ const ProductDetailScreen = () => {
 
   const fetchRelatedProducts = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${product._id}/related`);
+      const response = await fetch(`https://api.entsuki.com/api/products/${product._id}/related`);
       const data = await response.json();
       if (data.success && data.data) {
         setRelatedProducts(data.data.slice(0, 4)); // Limit to 4 products
@@ -136,7 +136,7 @@ const ProductDetailScreen = () => {
     setSubmittingQuestion(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/qna/ask', {
+      const response = await fetch('https://api.entsuki.com/api/qna/ask', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ const ProductDetailScreen = () => {
     setAddingToCart(true);
 
     try {
-      const response = await fetch(`http://localhost:5000/api/carts/${cart_code}/add-product`, {
+      const response = await fetch(`https://api.entsuki.com/api/carts/${cart_code}/add-product`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -239,7 +239,7 @@ const ProductDetailScreen = () => {
     setAddingToCart(true);
 
     try {
-      const response = await fetch(`http://localhost:5000/api/carts/${cart_code}/add-product`, {
+      const response = await fetch(`https://api.entsuki.com/api/carts/${cart_code}/add-product`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

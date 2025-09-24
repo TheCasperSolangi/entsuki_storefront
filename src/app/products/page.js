@@ -57,7 +57,7 @@ const ProductCatalogueContent = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5000/api/products`);
+        const response = await fetch(`https://api.entsuki.com/api/products`);
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

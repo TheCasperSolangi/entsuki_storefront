@@ -27,7 +27,7 @@ export default function TrackOrderPage() {
     setError(null);
     
     try {
-      const res = await fetch(`http://localhost:5000/api/orders/${orderCode}/track`);
+      const res = await fetch(`https://api.entsuki.com/api/orders/${orderCode}/track`);
       if (!res.ok) throw new Error(`Order not found (${res.status})`);
       
       const data = await res.json();

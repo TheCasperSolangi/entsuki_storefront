@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Mail, Linkedin, Facebook, Instagram, Twitter } from "lucide-react";
 import Link from "next/link";
 
-const Footer = ({ apiEndpoint = `http://localhost:5000/api/store/settings` }) => {
+const Footer = ({ apiEndpoint = `https://api.entsuki.com/api/store/settings` }) => {
   const [settings, setSettings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

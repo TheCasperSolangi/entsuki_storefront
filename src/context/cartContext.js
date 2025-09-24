@@ -29,7 +29,7 @@ export function CartProvider({ children }) {
     }
 
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/me`, {
+      const res = await fetch(`https://api.entsuki.com/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -76,7 +76,7 @@ export function CartProvider({ children }) {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://localhost:5000/api/carts/code/${code}?_=${Date.now()}`,
+        `https://api.entsuki.com/api/carts/code/${code}?_=${Date.now()}`,
         {
           method: "GET",
           headers: {
@@ -123,7 +123,7 @@ export function CartProvider({ children }) {
       setCartCount(prev => prev + quantity); // Optimistic update
 
       const res = await fetch(
-        `http://localhost:5000/api/carts/${code}/add-product`,
+        `https://api.entsuki.com/api/carts/${code}/add-product`,
         {
           method: "PUT",
           headers: {
